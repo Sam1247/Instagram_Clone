@@ -52,6 +52,49 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2002FD12238AEBA100B13F05 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				20462A8B238ABA2700A2BECC /* SignUpViewController.swift */,
+				2002FD0A238AE4AF00B13F05 /* MainTabBarController.swift */,
+				2002FD0C238AE53300B13F05 /* UserProfileController.swift */,
+				2002FD10238AE64700B13F05 /* UserProfileHeader.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		2002FD13238AEBB000B13F05 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				2002FD0E238AE58F00B13F05 /* User.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		2002FD14238AEBBC00B13F05 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		2002FD15238AEBCD00B13F05 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				20462A77238AB9D200A2BECC /* AppDelegate.swift */,
+				20462A79238AB9D200A2BECC /* SceneDelegate.swift */,
+			);
+			path = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		2002FD16238AEC0A00B13F05 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				20462A8D238ABAAE00A2BECC /* Extentions.swift */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
 		20462A6B238AB9D100A2BECC = {
 			isa = PBXGroup;
 			children = (
@@ -73,18 +116,15 @@
 		20462A76238AB9D200A2BECC /* Instagram_Clone_SW5 */ = {
 			isa = PBXGroup;
 			children = (
-				20462A77238AB9D200A2BECC /* AppDelegate.swift */,
-				20462A79238AB9D200A2BECC /* SceneDelegate.swift */,
+				2002FD14238AEBBC00B13F05 /* Views */,
+				2002FD13238AEBB000B13F05 /* Model */,
+				2002FD12238AEBA100B13F05 /* Controller */,
+				2002FD15238AEBCD00B13F05 /* Supporting Files */,
 				20462A80238AB9D300A2BECC /* Assets.xcassets */,
+				2002FD16238AEC0A00B13F05 /* Utilities */,
 				20462A82238AB9D300A2BECC /* LaunchScreen.storyboard */,
 				20462A85238AB9D300A2BECC /* Info.plist */,
-				20462A8B238ABA2700A2BECC /* SignUpViewController.swift */,
-				20462A8D238ABAAE00A2BECC /* Extentions.swift */,
 				208696F4238AD0A1005BE549 /* GoogleService-Info.plist */,
-				2002FD0A238AE4AF00B13F05 /* MainTabBarController.swift */,
-				2002FD0C238AE53300B13F05 /* UserProfileController.swift */,
-				2002FD0E238AE58F00B13F05 /* User.swift */,
-				2002FD10238AE64700B13F05 /* UserProfileHeader.swift */,
 			);
 			path = Instagram_Clone_SW5;
 			sourceTree = "<group>";
