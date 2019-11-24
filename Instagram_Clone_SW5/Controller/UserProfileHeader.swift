@@ -12,9 +12,28 @@ class UserProfileHeader: UICollectionViewCell {
     
     var user: User? {
         didSet {
-           setupProfileImage()
+            setupProfileImage()
             usernameLabel.text = user?.username
         }
+    }
+    
+    fileprivate func setupProfileImage() {
+        guard let profileImageUrl = user?.profileImageUrl else { return }
+        guard let url = URL(string: profileImageUrl) else { return }
+        URLSession.shared.dataTask(with: url) { (data, response, err) in
+            if let error = err {
+                print("Failed to fetch profile image:", error)
+                return
+            }
+            
+            guard let data = data else { return }
+            let image = UIImage(data: data)
+
+            DispatchQueue.main.async {
+                self.profileImageView.image = image
+            }
+
+        }.resume()
     }
     
     override init(frame: CGRect) {
@@ -111,26 +130,6 @@ class UserProfileHeader: UICollectionViewCell {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
-    
-    fileprivate func setupProfileImage() {
-        guard let profileImageUrl = user?.profileImageUrl else { return }
-        guard let url = URL(string: profileImageUrl) else { return }
-        URLSession.shared.dataTask(with: url) { (data, response, err) in
-            if let error = err {
-                print("Failed to fetch profile image:", error)
-                return
-            }
-            
-            guard let data = data else { return }
-            let image = UIImage(data: data)
-
-            DispatchQueue.main.async {
-                self.profileImageView.image = image
-            }
-
-        }.resume()
     }
     
     
