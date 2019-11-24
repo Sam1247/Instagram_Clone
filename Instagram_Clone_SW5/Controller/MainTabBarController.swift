@@ -13,6 +13,7 @@ class MainTabBarController: UITabBarController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        delegate = self
         if Auth.auth().currentUser == nil {
             DispatchQueue.main.async { // Wait until MainTabBarController is inside UI
                 let loginController = LoginController()
@@ -60,7 +61,19 @@ class MainTabBarController: UITabBarController {
         return navController
     }
     
+}
 
-    
-
+extension MainTabBarController: UITabBarControllerDelegate {
+    func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
+        let index = viewControllers?.firstIndex(of: viewController)
+        if index == 2 {
+            let layout = UICollectionViewFlowLayout()
+            let photoSelectorController = PhotoSelectorController(collectionViewLayout: layout)
+            let photoSelectorVC = UINavigationController(rootViewController: photoSelectorController)
+            photoSelectorVC.modalPresentationStyle = .fullScreen
+            present(photoSelectorVC, animated: true, completion: nil)
+            return false
+        }
+        return true
+    }
 }

@@ -13,11 +13,8 @@ class LoginController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationController?.navigationBar.isHidden = true
         view.backgroundColor = .white
-
         navigationController?.navigationBar.isHidden = true
-        
         view.addSubview(logoContrainerView)
         view.addSubview(dontHaveAccountButton)
         logoContrainerView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 150)
