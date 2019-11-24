@@ -15,9 +15,10 @@
 		20462A7A238AB9D200A2BECC /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20462A79238AB9D200A2BECC /* SceneDelegate.swift */; };
 		20462A81238AB9D300A2BECC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 20462A80238AB9D300A2BECC /* Assets.xcassets */; };
 		20462A84238AB9D300A2BECC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 20462A82238AB9D300A2BECC /* LaunchScreen.storyboard */; };
-		20462A8C238ABA2700A2BECC /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20462A8B238ABA2700A2BECC /* SignUpViewController.swift */; };
+		20462A8C238ABA2700A2BECC /* SignUpController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20462A8B238ABA2700A2BECC /* SignUpController.swift */; };
 		20462A8E238ABAAE00A2BECC /* Extentions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20462A8D238ABAAE00A2BECC /* Extentions.swift */; };
 		208696F5238AD0A1005BE549 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 208696F4238AD0A1005BE549 /* GoogleService-Info.plist */; };
+		20B77371238AF89B00D081BC /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20B77370238AF89B00D081BC /* LoginController.swift */; };
 		D764EA98CE6459492E19C455 /* Pods_Instagram_Clone_SW5.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9436DBA3775885AEA0C9BB03 /* Pods_Instagram_Clone_SW5.framework */; };
 /* End PBXBuildFile section */
 
@@ -33,9 +34,10 @@
 		20462A80238AB9D300A2BECC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		20462A83238AB9D300A2BECC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		20462A85238AB9D300A2BECC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		20462A8B238ABA2700A2BECC /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
+		20462A8B238ABA2700A2BECC /* SignUpController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpController.swift; sourceTree = "<group>"; };
 		20462A8D238ABAAE00A2BECC /* Extentions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extentions.swift; sourceTree = "<group>"; };
 		208696F4238AD0A1005BE549 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		20B77370238AF89B00D081BC /* LoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
 		81614F13271E36547B32061F /* Pods-Instagram_Clone_SW5.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Instagram_Clone_SW5.debug.xcconfig"; path = "Target Support Files/Pods-Instagram_Clone_SW5/Pods-Instagram_Clone_SW5.debug.xcconfig"; sourceTree = "<group>"; };
 		9436DBA3775885AEA0C9BB03 /* Pods_Instagram_Clone_SW5.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Instagram_Clone_SW5.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -55,10 +57,11 @@
 		2002FD12238AEBA100B13F05 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				20462A8B238ABA2700A2BECC /* SignUpViewController.swift */,
+				20462A8B238ABA2700A2BECC /* SignUpController.swift */,
 				2002FD0A238AE4AF00B13F05 /* MainTabBarController.swift */,
 				2002FD0C238AE53300B13F05 /* UserProfileController.swift */,
 				2002FD10238AE64700B13F05 /* UserProfileHeader.swift */,
+				20B77370238AF89B00D081BC /* LoginController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -299,9 +302,10 @@
 				20462A78238AB9D200A2BECC /* AppDelegate.swift in Sources */,
 				2002FD0D238AE53300B13F05 /* UserProfileController.swift in Sources */,
 				2002FD11238AE64700B13F05 /* UserProfileHeader.swift in Sources */,
+				20B77371238AF89B00D081BC /* LoginController.swift in Sources */,
 				2002FD0B238AE4AF00B13F05 /* MainTabBarController.swift in Sources */,
 				20462A7A238AB9D200A2BECC /* SceneDelegate.swift in Sources */,
-				20462A8C238ABA2700A2BECC /* SignUpViewController.swift in Sources */,
+				20462A8C238ABA2700A2BECC /* SignUpController.swift in Sources */,
 				2002FD0F238AE58F00B13F05 /* User.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
