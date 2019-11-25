@@ -25,24 +25,26 @@ class HomeController: UICollectionViewController {
 
     fileprivate func fetchPosts() {
         guard let uid = Auth.auth().currentUser?.uid else { return }
-
-        let ref = Database.database().reference().child("posts").child(uid)
+        Database.fetchUserWithUID(uid: uid) { (user) in
+            self.fetchPostsWithUser(user: user)
+        }
+    }
+    
+    fileprivate func fetchPostsWithUser(user: User) {
+        let ref = Database.database().reference().child("posts").child(user.uid)
         ref.observeSingleEvent(of: .value, with: { (snapshot) in
             guard let dictionaries = snapshot.value as? [String: Any] else { return }
-
             dictionaries.forEach({ (key, value) in
                 guard let dictionary = value as? [String: Any] else { return }
-
-                let post = Post(dictionary: dictionary)
+                
+                let post = Post(user: user, dictionary: dictionary)
                 self.posts.append(post)
             })
-
             self.collectionView?.reloadData()
-
+            
         }) { (err) in
             print("Failed to fetch posts:", err)
         }
-
     }
     
     func setupNavigationItems() {
@@ -53,7 +55,11 @@ class HomeController: UICollectionViewController {
 
 extension HomeController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: view.frame.width, height: 200)
+        var height: CGFloat = 40 + 8 + 8 //username and userProfileImageView
+        height += view.frame.width
+        height += 50
+        height += 60
+        return CGSize(width: view.frame.width, height: height)
     }
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {

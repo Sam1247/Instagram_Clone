@@ -59,8 +59,8 @@ class LoginController: UIViewController {
     
     let logoContrainerView: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor.rgb(red: 0, green: 120, blue: 175)
-        let logoImageView = UIImageView(image: #imageLiteral(resourceName: "Instagram_logo_white"))
+        //view.backgroundColor = UIColor.rgb(red: 0, green: 120, blue: 175)
+        let logoImageView = UIImageView(image: #imageLiteral(resourceName: "logo"))
         logoImageView.contentMode = .scaleAspectFill
         view.addSubview(logoImageView)
         logoImageView.anchor(top: nil, left: nil, bottom: nil, right: nil, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 200, height: 50)

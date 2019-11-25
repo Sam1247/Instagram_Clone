@@ -24,6 +24,7 @@
 		2088430A238B39C200D5EBE6 /* CustomImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20884309238B39C200D5EBE6 /* CustomImageView.swift */; };
 		2088430D238B4BC800D5EBE6 /* HomeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2088430C238B4BC800D5EBE6 /* HomeController.swift */; };
 		2088430F238B4C7300D5EBE6 /* HomePostCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2088430E238B4C7300D5EBE6 /* HomePostCell.swift */; };
+		208C8221238B535E00391134 /* FirebaseUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 208C8220238B535E00391134 /* FirebaseUtilities.swift */; };
 		20A61C57238B0F8D00D67F74 /* PhotoSelectorCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20A61C56238B0F8D00D67F74 /* PhotoSelectorCell.swift */; };
 		20A61C59238B0FFC00D67F74 /* PhotoSelectorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20A61C58238B0FFC00D67F74 /* PhotoSelectorController.swift */; };
 		20A61C5B238B10ED00D67F74 /* PhotoSelectorHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20A61C5A238B10ED00D67F74 /* PhotoSelectorHeader.swift */; };
@@ -52,6 +53,7 @@
 		20884309238B39C200D5EBE6 /* CustomImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomImageView.swift; sourceTree = "<group>"; };
 		2088430C238B4BC800D5EBE6 /* HomeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeController.swift; sourceTree = "<group>"; };
 		2088430E238B4C7300D5EBE6 /* HomePostCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePostCell.swift; sourceTree = "<group>"; };
+		208C8220238B535E00391134 /* FirebaseUtilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseUtilities.swift; sourceTree = "<group>"; };
 		20A61C56238B0F8D00D67F74 /* PhotoSelectorCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoSelectorCell.swift; sourceTree = "<group>"; };
 		20A61C58238B0FFC00D67F74 /* PhotoSelectorController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoSelectorController.swift; sourceTree = "<group>"; };
 		20A61C5A238B10ED00D67F74 /* PhotoSelectorHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PhotoSelectorHeader.swift; path = "Instagram_Clone_SW5/Photo Selector/PhotoSelectorHeader.swift"; sourceTree = SOURCE_ROOT; };
@@ -115,6 +117,7 @@
 			isa = PBXGroup;
 			children = (
 				20462A8D238ABAAE00A2BECC /* Extentions.swift */,
+				208C8220238B535E00391134 /* FirebaseUtilities.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -341,6 +344,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				208C8221238B535E00391134 /* FirebaseUtilities.swift in Sources */,
 				20A61C5B238B10ED00D67F74 /* PhotoSelectorHeader.swift in Sources */,
 				20462A8E238ABAAE00A2BECC /* Extentions.swift in Sources */,
 				2088430F238B4C7300D5EBE6 /* HomePostCell.swift in Sources */,
