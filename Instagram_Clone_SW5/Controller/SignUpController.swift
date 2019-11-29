@@ -16,6 +16,7 @@ class SignUpController: UIViewController, UIImagePickerControllerDelegate, UINav
     let photoButton: UIButton = {
         let button = UIButton(type: .system)
         button.setImage(#imageLiteral(resourceName: "plus_photo"), for: .normal)
+        button.tintColor = .black
         button.addTarget(self, action: #selector(handlePlusPhoto), for: .touchUpInside)
         return button
     }()
