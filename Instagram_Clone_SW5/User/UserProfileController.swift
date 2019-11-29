@@ -13,6 +13,7 @@ class UserProfileController: UICollectionViewController {
     
     var user: User?
     var posts = [Post]()
+    var userId: String?
 
     let cellId = "cellId"
     
@@ -20,18 +21,16 @@ class UserProfileController: UICollectionViewController {
         super.viewDidLoad()
 
         collectionView?.backgroundColor = .white
-        navigationItem.title = Auth.auth().currentUser?.uid
         collectionView?.register(UserProfilePhotoCell.self, forCellWithReuseIdentifier: cellId)
         
         
         collectionView?.register(UserProfileHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "headerId")
         setupLogOutButton()
         fetchUser()
-        fetchOrderedPosts()
     }
     
     fileprivate func fetchOrderedPosts() {
-        guard let uid = Auth.auth().currentUser?.uid else { return }
+        guard let uid = user?.uid else { return }
         let ref = Database.database().reference().child("posts").child(uid)
         ref.queryOrdered(byChild: "creationDate").observe(.childAdded, with: { (snapshot) in
             guard let dictionary = snapshot.value as? [String: Any] else { return }
@@ -44,21 +43,6 @@ class UserProfileController: UICollectionViewController {
         }
     }
 
-//    fileprivate func fetchPosts() {
-//        guard let uid = Auth.auth().currentUser?.uid else { return }
-//        let ref = Database.database().reference().child("posts").child(uid)
-//        ref.observeSingleEvent(of: .value, with: { (snapshot) in
-//            guard let dictionaries = snapshot.value as? [String: Any] else { return }
-//            dictionaries.forEach({ (key, value) in
-//                guard let dictionary = value as? [String: Any] else { return }
-//                let post = Post(dictionary: dictionary)
-//                self.posts.append(post)
-//            })
-//            self.collectionView?.reloadData()
-//        }) { (err) in
-//            print("Failed to fetch posts:", err)
-//        }
-//    }
         
     fileprivate func setupLogOutButton() {
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "gear").withRenderingMode(.alwaysOriginal), style: .plain, target: self, action: #selector(handleLogOut))
@@ -93,11 +77,12 @@ class UserProfileController: UICollectionViewController {
 
     
     fileprivate func fetchUser() {
-        guard let uid = Auth.auth().currentUser?.uid else { return }
+        let uid = userId ?? (Auth.auth().currentUser?.uid ?? "")
         Database.fetchUserWithUID(uid: uid) { (user) in
             self.user = user
             self.navigationItem.title = self.user?.username
             self.collectionView?.reloadData()
+            self.fetchOrderedPosts()
         }
     }
 }
