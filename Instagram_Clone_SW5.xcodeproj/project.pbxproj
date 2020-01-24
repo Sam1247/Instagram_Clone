@@ -31,6 +31,9 @@
 		20A61C59238B0FFC00D67F74 /* PhotoSelectorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20A61C58238B0FFC00D67F74 /* PhotoSelectorController.swift */; };
 		20A61C5B238B10ED00D67F74 /* PhotoSelectorHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20A61C5A238B10ED00D67F74 /* PhotoSelectorHeader.swift */; };
 		20B77371238AF89B00D081BC /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20B77370238AF89B00D081BC /* LoginController.swift */; };
+		20BB563023DB2489007A418C /* CommentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20BB562F23DB2489007A418C /* CommentCell.swift */; };
+		20BB563223DB24C2007A418C /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20BB563123DB24C2007A418C /* Comment.swift */; };
+		20BB563423DB2662007A418C /* CommentsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20BB563323DB2662007A418C /* CommentsController.swift */; };
 		D764EA98CE6459492E19C455 /* Pods_Instagram_Clone_SW5.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9436DBA3775885AEA0C9BB03 /* Pods_Instagram_Clone_SW5.framework */; };
 /* End PBXBuildFile section */
 
@@ -62,6 +65,9 @@
 		20A61C58238B0FFC00D67F74 /* PhotoSelectorController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoSelectorController.swift; sourceTree = "<group>"; };
 		20A61C5A238B10ED00D67F74 /* PhotoSelectorHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PhotoSelectorHeader.swift; path = "Instagram_Clone_SW5/Photo Selector/PhotoSelectorHeader.swift"; sourceTree = SOURCE_ROOT; };
 		20B77370238AF89B00D081BC /* LoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
+		20BB562F23DB2489007A418C /* CommentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentCell.swift; sourceTree = "<group>"; };
+		20BB563123DB24C2007A418C /* Comment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
+		20BB563323DB2662007A418C /* CommentsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsController.swift; sourceTree = "<group>"; };
 		81614F13271E36547B32061F /* Pods-Instagram_Clone_SW5.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Instagram_Clone_SW5.debug.xcconfig"; path = "Target Support Files/Pods-Instagram_Clone_SW5/Pods-Instagram_Clone_SW5.debug.xcconfig"; sourceTree = "<group>"; };
 		9436DBA3775885AEA0C9BB03 /* Pods_Instagram_Clone_SW5.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Instagram_Clone_SW5.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -94,6 +100,7 @@
 			children = (
 				2002FD0E238AE58F00B13F05 /* User.swift */,
 				20884305238B371E00D5EBE6 /* Post.swift */,
+				20BB563123DB24C2007A418C /* Comment.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -137,6 +144,7 @@
 		20462A76238AB9D200A2BECC /* Instagram_Clone_SW5 */ = {
 			isa = PBXGroup;
 			children = (
+				20BB562E23DB2453007A418C /* Comments */,
 				2002FD0A238AE4AF00B13F05 /* MainTabBarController.swift */,
 				2090A40C238DB0C500FBACB0 /* User */,
 				20945A6B238C6FB0007694EB /* User Search */,
@@ -190,6 +198,15 @@
 				20A61C58238B0FFC00D67F74 /* PhotoSelectorController.swift */,
 			);
 			path = "Photo Selector";
+			sourceTree = "<group>";
+		};
+		20BB562E23DB2453007A418C /* Comments */ = {
+			isa = PBXGroup;
+			children = (
+				20BB562F23DB2489007A418C /* CommentCell.swift */,
+				20BB563323DB2662007A418C /* CommentsController.swift */,
+			);
+			path = Comments;
 			sourceTree = "<group>";
 		};
 		68D840194755F2166C05ADAF /* Frameworks */ = {
@@ -359,8 +376,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				208C8221238B535E00391134 /* FirebaseUtilities.swift in Sources */,
+				20BB563223DB24C2007A418C /* Comment.swift in Sources */,
 				20A61C5B238B10ED00D67F74 /* PhotoSelectorHeader.swift in Sources */,
 				20462A8E238ABAAE00A2BECC /* Extentions.swift in Sources */,
+				20BB563023DB2489007A418C /* CommentCell.swift in Sources */,
+				20BB563423DB2662007A418C /* CommentsController.swift in Sources */,
 				2088430F238B4C7300D5EBE6 /* HomePostCell.swift in Sources */,
 				20462A78238AB9D200A2BECC /* AppDelegate.swift in Sources */,
 				2002FD0D238AE53300B13F05 /* UserProfileController.swift in Sources */,

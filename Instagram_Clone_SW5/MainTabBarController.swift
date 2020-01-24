@@ -15,9 +15,10 @@ class MainTabBarController: UITabBarController {
         super.viewDidLoad()
         delegate = self
         if Auth.auth().currentUser == nil {
-            DispatchQueue.main.async { // Wait until MainTabBarController is inside UI
+            DispatchQueue.main.async {
                 let loginController = LoginController()
                 let navController = UINavigationController(rootViewController: loginController)
+                navController.modalPresentationStyle = .fullScreen
                 self.present(navController, animated: true, completion: nil)
             }
             return

@@ -27,7 +27,10 @@ class SharePhotoController: UIViewController {
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Share", style: .plain, target: self, action: #selector(handleShare))
         setupViews()
     }
-
+    
+    // update HomeFeed
+    static let updateFeedNotificationName = Notification.Name(rawValue: "UpdateFeed")
+    
     @objc private func handleShare() {
         guard let caption = textView.text, !caption.isEmpty else { return }
         guard let image = selectedImage else { return }
@@ -68,6 +71,7 @@ class SharePhotoController: UIViewController {
             }
             print("Successfully saved post to DB")
             self.dismiss(animated: true, completion: nil)
+            NotificationCenter.default.post(name: SharePhotoController.updateFeedNotificationName, object: nil)
         }
     }
 

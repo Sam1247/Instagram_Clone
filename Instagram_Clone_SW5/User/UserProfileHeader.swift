@@ -12,6 +12,8 @@ class UserProfileHeader: UICollectionViewCell {
         }
     }
     
+    var delegate: UserProfileHeaderDelegate?
+    
     fileprivate func setupEditFollowButton() {
         guard let currentLoggedInUserId = Auth.auth().currentUser?.uid else { return }
         guard let userId = user?.uid else { return }
@@ -19,17 +21,13 @@ class UserProfileHeader: UICollectionViewCell {
         if currentLoggedInUserId == userId {
             //edit
         } else {
-            
             // check if following
             Database.database().reference().child("following").child(currentLoggedInUserId).child(userId).observeSingleEvent(of: .value, with: { (snapshot) in
-                
                 if let isFollowing = snapshot.value as? Int, isFollowing == 1 {
                     self.editProfileFollowButton.setTitle("Unfollow", for: .normal)
-                    
                 } else {
                     self.setupFollowStyle()
                 }
-                
             }) { (err) in
                 print("Failed to check if following:", err)
             }
@@ -103,19 +101,33 @@ class UserProfileHeader: UICollectionViewCell {
         return iv
     }()
     
-    let gridButton: UIButton = {
+    lazy var  gridButton: UIButton = {
         let button = UIButton(type: .system)
         button.setImage(#imageLiteral(resourceName: "grid"), for: .normal)
+        button.addTarget(self, action: #selector(handleChangeToGridView), for: .touchUpInside)
         return button
     }()
     
-    let listButton: UIButton = {
+    @objc func handleChangeToGridView() {
+        gridButton.tintColor = UIColor.rgb(red: 17, green: 154, blue: 237)
+        listButton.tintColor = UIColor(white: 0, alpha: 0.2)
+        delegate?.didChangeToGridView()
+    }
+    
+    lazy var listButton: UIButton = {
         let button = UIButton(type: .system)
         button.setImage(#imageLiteral(resourceName: "list"), for: .normal)
         button.tintColor = UIColor(white: 0, alpha: 0.2)
+        button.addTarget(self, action: #selector(handleChangeToListView), for: .touchUpInside)
         return button
     }()
     
+    @objc func handleChangeToListView() {
+        listButton.tintColor = UIColor.rgb(red: 17, green: 154, blue: 237)
+        gridButton.tintColor = UIColor(white: 0, alpha: 0.2)
+        delegate?.didChangeToListView()
+    }
+
     let bookmarkButton: UIButton = {
         let button = UIButton(type: .system)
         button.setImage(#imageLiteral(resourceName: "ribbon"), for: .normal)

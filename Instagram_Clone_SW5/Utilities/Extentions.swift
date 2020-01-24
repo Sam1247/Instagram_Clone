@@ -38,3 +38,25 @@ extension UIView {
         }
     }
 }
+
+extension Date {
+    func displayTimeAgo() -> String {
+        let secondsAgo = Int(Date().timeIntervalSince(self))
+        let minute = 60
+        let hour = 60*60
+        let day = 60*60*24
+        let week = 60*60*24*7
+        
+        if secondsAgo < minute {
+            return "\(secondsAgo) seconds ago"
+        } else if secondsAgo < hour {
+            return "\(secondsAgo / minute) minutes ago"
+        } else if secondsAgo < day {
+            return "\(secondsAgo / hour) hours ago"
+        } else if secondsAgo < week {
+            return "\(secondsAgo / day) days ago"
+        } else {
+            return "\(secondsAgo / week) weeks ago"
+        }
+    }
+}

@@ -9,18 +9,31 @@
 import UIKit
 import Firebase
 
-class HomeController: UICollectionViewController {
-
+class HomeController: UICollectionViewController, HomePostCellDelegate {
+    
+    
     let cellId = "cellId"
     var posts = [Post]()
+    let refreshControl = UIRefreshControl()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         collectionView?.backgroundColor = .white
         collectionView?.register(HomePostCell.self, forCellWithReuseIdentifier: cellId)
-
+        NotificationCenter.default.addObserver(self, selector: #selector(handleUpdateFeed), name: SharePhotoController.updateFeedNotificationName, object: nil)
+        refreshControl.addTarget(self, action: #selector(refresh), for: .valueChanged)
+        collectionView?.refreshControl = refreshControl
         setupNavigationItems()
+        fetchAllPosts()
+    }
+    
+    fileprivate func fetchAllPosts() {
         fetchPosts()
+        fetchFollowingPosts()
+    }
+    
+    @objc func handleUpdateFeed() {
+        refresh()
     }
 
     fileprivate func fetchPosts() {
@@ -30,17 +43,55 @@ class HomeController: UICollectionViewController {
         }
     }
     
+    fileprivate func fetchFollowingPosts() {
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+         Database.database().reference().child("following").child(uid).observeSingleEvent(of: .value, with: { (snapshot) in
+             guard let userIdsDictionary = snapshot.value as? [String: Any] else { return }
+             userIdsDictionary.forEach({ (key, value) in
+                Database.fetchUserWithUID(uid: key, completion: { (user) in
+                    self.fetchPostsWithUser(user: user)
+                })
+            })
+
+         }) { (err) in
+            print("Failed to fetch followung user ids:", err)
+        }
+    }
+    
+    @objc func refresh() {
+        print("refresh...")
+        posts.removeAll()
+        fetchAllPosts()
+    }
+    
     fileprivate func fetchPostsWithUser(user: User) {
         let ref = Database.database().reference().child("posts").child(user.uid)
         ref.observeSingleEvent(of: .value, with: { (snapshot) in
+            self.collectionView?.refreshControl?.endRefreshing()
             guard let dictionaries = snapshot.value as? [String: Any] else { return }
             dictionaries.forEach({ (key, value) in
                 guard let dictionary = value as? [String: Any] else { return }
                 
-                let post = Post(user: user, dictionary: dictionary)
-                self.posts.append(post)
+                var post = Post(user: user, dictionary: dictionary)
+                post.id = key
+                guard let uid = Auth.auth().currentUser?.uid else { return }
+                Database.database().reference().child("likes").child(key).child(uid).observe(.value, with: { (snapshot) in
+                    if let value = snapshot.value as? Int, value == 1 {
+                        post.hasLiked = true
+                    } else {
+                        post.hasLiked = false
+                    }
+                    self.posts.append(post)
+                }, withCancel: { (err) in
+                    print("Failed to fetch like info for post:", err)
+                })
             })
-            self.collectionView?.reloadData()
+            self.posts.sort(by: { (p1, p2) -> Bool in
+                return p1.creationDate.compare(p2.creationDate) == .orderedDescending
+            })
+            DispatchQueue.main.async {
+                self.collectionView?.reloadData()
+            }
             
         }) { (err) in
             print("Failed to fetch posts:", err)
@@ -68,7 +119,49 @@ extension HomeController: UICollectionViewDelegateFlowLayout {
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! HomePostCell
-        cell.post = posts[indexPath.item]
+        if !self.refreshControl.isRefreshing {
+            cell.post = posts[indexPath.item]
+        }
+        cell.delegate = self
         return cell
     }
+    
+    func didTapComment(post: Post) {
+        let commentsController = CommentsController(collectionViewLayout: UICollectionViewFlowLayout())
+        commentsController.post = post
+        navigationController?.pushViewController(commentsController, animated: true)
+    }
+    
+    func didLike(for cell: HomePostCell) {
+        
+        guard let indexPath = collectionView?.indexPath(for: cell) else { return }
+
+        var post = posts[indexPath.item]
+
+        guard let postId = post.id else { return }
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+
+
+        let values = [uid: post.hasLiked ? 0 : 1]
+        
+        Database.database().reference().child("likes").child(postId).updateChildValues(values) { (err, _) in
+
+            if let err = err {
+                print("Failed to like post:", err)
+                return
+            }
+
+            print("Successfully liked post")
+
+            post.hasLiked = !post.hasLiked
+            
+            // struct xD
+            DispatchQueue.main.async {
+                self.posts[indexPath.item] = post
+                self.collectionView?.reloadItems(at: [indexPath])
+            }
+            
+        }
+    }
+
 }

@@ -10,6 +10,8 @@ import UIKit
 
 class HomePostCell: UICollectionViewCell {
     
+    var delegate: HomePostCellDelegate?
+    
     let usernameLabel: UILabel = {
         let label = UILabel()
         label.text = "Username"
@@ -24,17 +26,28 @@ class HomePostCell: UICollectionViewCell {
         return button
     }()
 
-    let likeButton: UIButton = {
+    lazy var likeButton: UIButton = {
         let button = UIButton(type: .system)
         button.setImage(#imageLiteral(resourceName: "like_unselected").withRenderingMode(.alwaysOriginal), for: .normal)
+        button.addTarget(self, action: #selector(handleLike), for: .touchUpInside)
         return button
     }()
+    
+    @objc func handleLike() {
+        delegate?.didLike(for: self)
+    }
 
-    let commentButton: UIButton = {
+    lazy var commentButton: UIButton = {
         let button = UIButton(type: .system)
         button.setImage(#imageLiteral(resourceName: "comment").withRenderingMode(.alwaysOriginal), for: .normal)
+        button.addTarget(self, action: #selector(handleComment), for: .touchUpInside)
         return button
     }()
+    
+    @objc func handleComment() {
+        guard let post = post else { return }
+        delegate?.didTapComment(post: post)
+    }
 
     let sendMessageButton: UIButton = {
         let button = UIButton(type: .system)
@@ -57,6 +70,7 @@ class HomePostCell: UICollectionViewCell {
     var post: Post? {
         didSet {
             guard let postImageUrl = post?.imageUrl else { return }
+            likeButton.setImage(post?.hasLiked == true ? #imageLiteral(resourceName: "like_selected").withRenderingMode(.alwaysOriginal) : #imageLiteral(resourceName: "like_unselected").withRenderingMode(.alwaysOriginal), for: .normal)
             photoImageView.loadImage(urlString: postImageUrl)
             guard let profileImageUrl = post?.user.profileImageUrl else { return }
             usernameLabel.text = post!.user.username
@@ -71,7 +85,7 @@ class HomePostCell: UICollectionViewCell {
         attributedText.append(NSAttributedString(string: " \(post.caption)", attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14)]))
 
         attributedText.append(NSAttributedString(string: "\n\n", attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 4)]))
-        attributedText.append(NSAttributedString(string: "1 week ago", attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14), NSAttributedString.Key.foregroundColor: UIColor.gray]))
+        attributedText.append(NSAttributedString(string: post.creationDate.displayTimeAgo(), attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14), NSAttributedString.Key.foregroundColor: UIColor.gray]))
 
         captionLabel.attributedText = attributedText
     }
