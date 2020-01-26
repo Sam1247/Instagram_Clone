@@ -133,43 +133,29 @@ class SignUpController: UIViewController, UIImagePickerControllerDelegate, UINav
     
     @objc
     func handleSignUp() {
-        guard let email = emailTextField.text else { return }
-        guard let username = usernameTextField.text else { return }
-        guard let password = passwordTextField.text else { return }
-        guard let image = photoButton.imageView?.image else { return }
-        guard let imageData = image.jpegData(compressionQuality: 0.1) else { return }
-        Auth.auth().createUser(withEmail: email, password: password) { (res, error) in
-            if error != nil {
-                print(error.debugDescription)
+        guard let email = emailTextField.text, !email.isEmpty else { return }
+        guard let username = usernameTextField.text, !username.isEmpty else { return }
+        guard let password = passwordTextField.text, !password.isEmpty else { return }
+        
+        Auth.auth().createUser(withEmail: email, username: username, password: password, image: photoButton.imageView?.image) { (err) in
+            if let err = err {
+                print("Failed to sign up user:", err)
+                self.emailTextField.text = ""
+                self.usernameTextField.text = ""
+                self.passwordTextField.text = ""
+                return
             }
-            let user = res?.user
-            let filename = NSUUID().uuidString
-            Storage.storage().reference().child("profile_images").child(filename).putData(imageData, metadata: nil) { (metadata, error) in
-                if error != nil {
-                    print(error.debugDescription)
-                }
-                let storageRef = Storage.storage().reference().child("profile_images").child(filename)
-                storageRef.downloadURL { (URL, error) in
-                    if error != nil {
-                        print(error.debugDescription)
-                    }
-                    guard let uid = user?.uid else { return }
-                    let profileImageUrl = URL?.absoluteString
-                    let databaseRef = Database.database().reference()
-                    let usersRef = databaseRef.child("users")
-                    let userRef = usersRef.child(uid)
-                    userRef.setValue(["username": username, "profileImageUrl": profileImageUrl])
-                    let keyWindow = UIApplication.shared.connectedScenes
-                        .filter({$0.activationState == .foregroundActive})
-                        .map({$0 as? UIWindowScene})
-                        .compactMap({$0})
-                        .first?.windows
-                        .filter({$0.isKeyWindow}).first
-                    guard let mainTabBarController = keyWindow?.rootViewController as? MainTabBarController else { return }
-                    mainTabBarController.setupViewControllers()
-                    self.dismiss(animated: true, completion: nil)
-                }
-            }
+            print("Sucessfully signed up user")
+            let keyWindow = UIApplication.shared.connectedScenes
+                .filter({$0.activationState == .foregroundActive})
+                .map({$0 as? UIWindowScene})
+                .compactMap({$0})
+                .first?.windows
+                .filter({$0.isKeyWindow}).first
+            guard let mainTabBarController = keyWindow?.rootViewController as? MainTabBarController else { return }
+            mainTabBarController.setupViewControllers()
+            self.dismiss(animated: true, completion: nil)
+
         }
     }
     

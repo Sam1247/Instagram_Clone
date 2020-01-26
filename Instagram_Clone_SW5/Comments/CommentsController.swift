@@ -9,7 +9,7 @@
 import UIKit
 import Firebase
 
-class CommentsController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
+class CommentsController: UICollectionViewController, UICollectionViewDelegateFlowLayout, CommentInputAccessoryViewDelegate {
     
     var comments = [Comment]()
     
@@ -80,29 +80,14 @@ class CommentsController: UICollectionViewController, UICollectionViewDelegateFl
         return CGSize(width: view.frame.width, height: height)
     }
     
-    lazy var containerView: UIView = {
+    lazy var containerView: CommentInputAccessoryView = {
+        let frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 50)
+        let commentInputAccessoryView = CommentInputAccessoryView(frame: frame)
         let containerView = UIView()
         containerView.backgroundColor = .white
         containerView.frame = CGRect(x: 0, y: 0, width: 100, height: 50)
-
-
-        let submitButton = UIButton(type: .system)
-        submitButton.setTitle("Submit", for: .normal)
-        submitButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
-        submitButton.setTitleColor(.black, for: .normal)
-        submitButton.addTarget(self, action: #selector(handleSubmit), for: .touchUpInside)
-        containerView.addSubview(submitButton)
-        submitButton.anchor(top: containerView.topAnchor, left: nil, bottom: containerView.bottomAnchor, right: containerView.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 12, width: 50, height: 0)
-
-        containerView.addSubview(commentTextField)
-        commentTextField.anchor(top: containerView.topAnchor, left: containerView.leftAnchor, bottom: containerView.bottomAnchor, right: submitButton.leftAnchor, paddingTop: 0, paddingLeft: 12, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
-
-        let lineSeparatorView = UIView()
-        lineSeparatorView.backgroundColor = UIColor.rgb(red: 230, green: 230, blue: 230)
-        containerView.addSubview(lineSeparatorView)
-        lineSeparatorView.anchor(top: containerView.topAnchor, left: containerView.leftAnchor, bottom: nil, right: containerView.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0.5)
-
-        return containerView
+        commentInputAccessoryView.delegate = self
+        return commentInputAccessoryView
     }()
 
     let commentTextField: UITextField = {
@@ -111,15 +96,16 @@ class CommentsController: UICollectionViewController, UICollectionViewDelegateFl
         return textField
     }()
 
-    @objc func handleSubmit() {
+    func didSubmit(for comment: String) {
         guard let uid = Auth.auth().currentUser?.uid else { return }
         let postId = post?.id ?? ""
-        let values = ["text": commentTextField.text ?? "", "creationDate": Date().timeIntervalSince1970, "uid": uid] as [String: Any]
+        let values = ["text": comment , "creationDate": Date().timeIntervalSince1970, "uid": uid] as [String: Any]
         Database.database().reference().child("comments").child(postId).childByAutoId().updateChildValues(values) { (err, ref) in
             if let err = err {
                 print("Failed to insert comment:", err)
                 return
             }
+            self.containerView.clearCommentTextField()
             print("Successfully inserted comment")
         }
     }
@@ -134,5 +120,6 @@ class CommentsController: UICollectionViewController, UICollectionViewDelegateFl
         return true
     }
 
+    
     
 }

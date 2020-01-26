@@ -21,6 +21,9 @@ class LoginController: UIViewController {
         UIApplication.shared.statusBarStyle = .default
     }
     
+    override var preferredStatusBarStyle: UIStatusBarStyle { return .lightContent }
+
+    
     let logoContrainerView: UIView = {
         let view = UIView()
         let logoImageView = UIImageView(image: #imageLiteral(resourceName: "logo"))

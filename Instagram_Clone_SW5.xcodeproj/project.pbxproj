@@ -34,6 +34,8 @@
 		20BB563023DB2489007A418C /* CommentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20BB562F23DB2489007A418C /* CommentCell.swift */; };
 		20BB563223DB24C2007A418C /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20BB563123DB24C2007A418C /* Comment.swift */; };
 		20BB563423DB2662007A418C /* CommentsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20BB563323DB2662007A418C /* CommentsController.swift */; };
+		20EACCCD23DC35B700FD431F /* CommentInputAccessoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20EACCCC23DC35B700FD431F /* CommentInputAccessoryView.swift */; };
+		20EACCCF23DC364000FD431F /* CommentInputTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20EACCCE23DC364000FD431F /* CommentInputTextView.swift */; };
 		D764EA98CE6459492E19C455 /* Pods_Instagram_Clone_SW5.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9436DBA3775885AEA0C9BB03 /* Pods_Instagram_Clone_SW5.framework */; };
 /* End PBXBuildFile section */
 
@@ -68,6 +70,8 @@
 		20BB562F23DB2489007A418C /* CommentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentCell.swift; sourceTree = "<group>"; };
 		20BB563123DB24C2007A418C /* Comment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
 		20BB563323DB2662007A418C /* CommentsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsController.swift; sourceTree = "<group>"; };
+		20EACCCC23DC35B700FD431F /* CommentInputAccessoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentInputAccessoryView.swift; sourceTree = "<group>"; };
+		20EACCCE23DC364000FD431F /* CommentInputTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentInputTextView.swift; sourceTree = "<group>"; };
 		81614F13271E36547B32061F /* Pods-Instagram_Clone_SW5.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Instagram_Clone_SW5.debug.xcconfig"; path = "Target Support Files/Pods-Instagram_Clone_SW5/Pods-Instagram_Clone_SW5.debug.xcconfig"; sourceTree = "<group>"; };
 		9436DBA3775885AEA0C9BB03 /* Pods_Instagram_Clone_SW5.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Instagram_Clone_SW5.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -144,8 +148,8 @@
 		20462A76238AB9D200A2BECC /* Instagram_Clone_SW5 */ = {
 			isa = PBXGroup;
 			children = (
-				20BB562E23DB2453007A418C /* Comments */,
 				2002FD0A238AE4AF00B13F05 /* MainTabBarController.swift */,
+				20BB562E23DB2453007A418C /* Comments */,
 				2090A40C238DB0C500FBACB0 /* User */,
 				20945A6B238C6FB0007694EB /* User Search */,
 				2088430B238B4BA900D5EBE6 /* Home */,
@@ -205,6 +209,8 @@
 			children = (
 				20BB562F23DB2489007A418C /* CommentCell.swift */,
 				20BB563323DB2662007A418C /* CommentsController.swift */,
+				20EACCCC23DC35B700FD431F /* CommentInputAccessoryView.swift */,
+				20EACCCE23DC364000FD431F /* CommentInputTextView.swift */,
 			);
 			path = Comments;
 			sourceTree = "<group>";
@@ -376,6 +382,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				208C8221238B535E00391134 /* FirebaseUtilities.swift in Sources */,
+				20EACCCD23DC35B700FD431F /* CommentInputAccessoryView.swift in Sources */,
 				20BB563223DB24C2007A418C /* Comment.swift in Sources */,
 				20A61C5B238B10ED00D67F74 /* PhotoSelectorHeader.swift in Sources */,
 				20462A8E238ABAAE00A2BECC /* Extentions.swift in Sources */,
@@ -398,6 +405,7 @@
 				20A61C59238B0FFC00D67F74 /* PhotoSelectorController.swift in Sources */,
 				2002FD0F238AE58F00B13F05 /* User.swift in Sources */,
 				20945A6D238C7016007694EB /* UserSearchCell.swift in Sources */,
+				20EACCCF23DC364000FD431F /* CommentInputTextView.swift in Sources */,
 				20A61C57238B0F8D00D67F74 /* PhotoSelectorCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

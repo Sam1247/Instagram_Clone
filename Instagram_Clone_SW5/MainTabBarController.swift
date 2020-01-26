@@ -10,20 +10,24 @@ import UIKit
 import Firebase
 
 class MainTabBarController: UITabBarController {
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         delegate = self
         if Auth.auth().currentUser == nil {
-            DispatchQueue.main.async {
-                let loginController = LoginController()
-                let navController = UINavigationController(rootViewController: loginController)
-                navController.modalPresentationStyle = .fullScreen
-                self.present(navController, animated: true, completion: nil)
-            }
-            return
+            presentLoginController()
+        } else {
+            setupViewControllers()
         }
-        setupViewControllers()
+    }
+    
+    fileprivate func presentLoginController() {
+        DispatchQueue.main.async {
+            let loginController = LoginController()
+            let navController = UINavigationController(rootViewController: loginController)
+            navController.modalPresentationStyle = .fullScreen
+            self.present(navController, animated: true, completion: nil)
+        }
     }
     
     func setupViewControllers() {
@@ -36,11 +40,7 @@ class MainTabBarController: UITabBarController {
         
         let likeNavController = templateNavController(unselectedImage: #imageLiteral(resourceName: "like_unselected"), selectedImage: #imageLiteral(resourceName: "like_selected"))
         //user profile
-        let layout = UICollectionViewFlowLayout()
-        let userProfileController = UserProfileController(collectionViewLayout: layout)
-        let userProfileNavController = UINavigationController(rootViewController: userProfileController)
-        userProfileNavController.tabBarItem.image = #imageLiteral(resourceName: "profile_unselected")
-        userProfileNavController.tabBarItem.selectedImage = #imageLiteral(resourceName: "profile_selected")
+        let userProfileNavController = templateNavController(unselectedImage: #imageLiteral(resourceName: "profile_unselected"), selectedImage: #imageLiteral(resourceName: "profile_selected"), rootViewController: UserProfileController(collectionViewLayout: UICollectionViewFlowLayout()))
         
         tabBar.tintColor = .black
         
