@@ -15,9 +15,13 @@ class HomeController: UICollectionViewController, HomePostCellDelegate {
     let cellId = "cellId"
     var posts = [Post]()
     let refreshControl = UIRefreshControl()
+    
+    let loadingPhotosQueue = OperationQueue()
+    var loadingPhotosOperations: [IndexPath: DataPrefetchOperation] = [:]
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        collectionView?.prefetchDataSource = self
         collectionView?.backgroundColor = .white
         collectionView?.register(HomePostCell.self, forCellWithReuseIdentifier: cellId)
         NotificationCenter.default.addObserver(self, selector: #selector(handleUpdateFeed), name: SharePhotoController.updateFeedNotificationName, object: nil)
@@ -121,9 +125,19 @@ extension HomeController: UICollectionViewDelegateFlowLayout {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! HomePostCell
         if !self.refreshControl.isRefreshing {
             cell.post = posts[indexPath.item]
+            
+            // TODO: what if operation queue and customImage.load doesn't fetch => we left with two request!
+            
         }
         cell.delegate = self
         return cell
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        if let dataLoader = loadingPhotosOperations[indexPath] {
+            loadingPhotosOperations.removeValue(forKey: indexPath)
+            dataLoader.cancel()
+        }
     }
     
     func didTapComment(post: Post) {
@@ -155,7 +169,7 @@ extension HomeController: UICollectionViewDelegateFlowLayout {
 
             post.hasLiked = !post.hasLiked
             
-            // struct xD
+            // structs man! xD
             DispatchQueue.main.async {
                 self.posts[indexPath.item] = post
                 self.collectionView?.reloadItems(at: [indexPath])
@@ -164,4 +178,32 @@ extension HomeController: UICollectionViewDelegateFlowLayout {
         }
     }
 
+}
+
+
+extension HomeController: UICollectionViewDataSourcePrefetching {
+    func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
+        if !self.refreshControl.isRefreshing {
+            for indexPath in indexPaths {
+                let imageUrl = posts[indexPath.row].imageUrl
+                if imageCache[imageUrl] == nil {
+                    print("loading indexpath: \(indexPath)")
+                    let dataPrefetcher = DataPrefetchOperation(with: imageUrl)
+                    loadingPhotosQueue.addOperation(dataPrefetcher)
+                    loadingPhotosOperations[indexPath] = dataPrefetcher
+                }
+            }
+        }
+    }
+    
+    // it's only called when the cache is cleared as the photos
+    func collectionView(_ collectionView: UICollectionView, cancelPrefetchingForItemsAt indexPaths: [IndexPath]) {
+        for indexPath in indexPaths {
+            if let dataPrefetcher = loadingPhotosOperations[indexPath] {
+                dataPrefetcher.cancel()
+                loadingPhotosOperations.removeValue(forKey: indexPath)
+                print("cancel loading indexpath: \(indexPath)")
+            }
+        }
+    }
 }

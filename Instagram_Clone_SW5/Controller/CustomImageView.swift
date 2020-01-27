@@ -13,7 +13,9 @@ var imageCache = [String: UIImage]()
 
 
 class CustomImageView: UIImageView {
+    
     var lastURLUsedToLoadImage: String?
+    
     func loadImage(urlString: String) {
         print("Loading image...")
         lastURLUsedToLoadImage = urlString
@@ -39,7 +41,7 @@ class CustomImageView: UIImageView {
             DispatchQueue.main.async {
                 self.image = photoImage
             }
-            }.resume()
+        }.resume()
     }
 
 }

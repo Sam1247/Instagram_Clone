@@ -79,6 +79,8 @@ class HomePostCell: UICollectionViewCell {
         }
     }
     
+    
+    
     fileprivate func setupAttributedCaption() {
         guard let post = self.post else { return }
         let attributedText = NSMutableAttributedString(string: post.user.username, attributes: [NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 14)])
