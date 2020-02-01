@@ -68,7 +68,7 @@ extension MainTabBarController: UITabBarControllerDelegate {
     func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
         let index = viewControllers?.firstIndex(of: viewController)
         if index == 2 {
-            let layout = UICollectionViewFlowLayout()
+            let layout = MosiacLayout()
             let photoSelectorController = PhotoSelectorController(collectionViewLayout: layout)
             let photoSelectorVC = UINavigationController(rootViewController: photoSelectorController)
             photoSelectorVC.modalPresentationStyle = .fullScreen

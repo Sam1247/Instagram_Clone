@@ -15,14 +15,33 @@ class PhotoSelectorController: UICollectionViewController {
     let headerId = "headerId"
     var header: PhotoSelectorHeader?
     
+    var mosiacLayout: MosiacLayout? {
+      return collectionView?.collectionViewLayout as? MosiacLayout
+    }
+    
+    var topbarHeight: CGFloat {
+        return (view.window?.windowScene?.statusBarManager?.statusBarFrame.height ?? 0.0) +
+            (self.navigationController?.navigationBar.frame.height ?? 0.0)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        collectionView?.backgroundColor = .white
+        collectionView?.backgroundColor = .black
         setupNavigationButtons()
+        
+        mosiacLayout?.delegate = self
+        
+        
+        collectionView.frame.origin.y += topbarHeight + 40
+        //navigationController?.navigationBar.isHidden = true
+//        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
+//        navigationController?.navigationBar.shadowImage = UIImage()
+        collectionView.contentInsetAdjustmentBehavior = .never
+        //collectionView.backgroundColor = .black
         
         collectionView?.register(PhotoSelectorCell.self, forCellWithReuseIdentifier: cellId)
         
-        collectionView?.register(PhotoSelectorHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: headerId)
+        collectionView?.register(PhotoSelectorHeader.self, forSupplementaryViewOfKind: Element.header.kind, withReuseIdentifier: headerId)
     
         fetchPhotos()
     }
@@ -45,7 +64,7 @@ class PhotoSelectorController: UICollectionViewController {
         DispatchQueue.global().async {
             allPhotos.enumerateObjects { (asset, count, stop) in
                 let imageManager = PHImageManager.default()
-                let targetSize = CGSize(width: 200, height: 200)
+                let targetSize = CGSize(width: 600, height: 600)
                 let options = PHImageRequestOptions()
                 options.isSynchronous = true
                 imageManager.requestImage(for: asset, targetSize: targetSize, contentMode: .aspectFit, options: options, resultHandler: { (image, info) in
@@ -73,9 +92,10 @@ class PhotoSelectorController: UICollectionViewController {
     
     private func setupNavigationButtons() {
         navigationController?.navigationBar.tintColor = .black
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(handleCancel))
+        //navigationController?.navigationBar.backgroundColor = .clea
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .done, target: self, action: #selector(handleCancel))
     
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Next", style: .plain, target: self, action: #selector(handleNext))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Next", style: .done, target: self, action: #selector(handleNext))
     }
     
     @objc private func handleCancel() {
@@ -85,10 +105,18 @@ class PhotoSelectorController: UICollectionViewController {
     @objc
     private func handleNext() {
         let sharePhotoController = SharePhotoController()
-        sharePhotoController.selectedImage = header?.photoImageView.image
+        sharePhotoController.selectedImage = selectedImage
         navigationController?.pushViewController(sharePhotoController, animated: true)
 
     }
+    
+    weak var headerView: PhotoSelectorHeader?
+    
+//    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
+//        let contentOffsetY = scrollView.contentOffset.y
+//        headerView?.animator.fractionComplete = abs(contentOffsetY)/100
+//    }
+    
 }
 
 extension PhotoSelectorController: UICollectionViewDelegateFlowLayout {
@@ -106,13 +134,16 @@ extension PhotoSelectorController: UICollectionViewDelegateFlowLayout {
         return UIEdgeInsets(top: 1, left: 0, bottom: 0, right: 0)
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        let width = view.frame.width
-        return CGSize(width: width, height: width)
-    }
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+//        let width = view.frame.width
+//        return CGSize(width: width, height: width)
+//    }
+    
+    
     
     override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: headerId, for: indexPath) as! PhotoSelectorHeader
+        let header = collectionView.dequeueReusableSupplementaryView(ofKind: Element.header.kind, withReuseIdentifier: headerId, for: indexPath) as! PhotoSelectorHeader
+        headerView = header
         header.photoImageView.image = selectedImage
         self.header = header
         if let selectedImage = selectedImage {
@@ -128,18 +159,18 @@ extension PhotoSelectorController: UICollectionViewDelegateFlowLayout {
         return header
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return 1
-    }
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+//        return 1
+//    }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let width = (view.frame.width - 3) / 4
-        return CGSize(width: width, height: width)
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return 1
-    }
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+//        let width = (view.frame.width - 3) / 4
+//        return CGSize(width: width, height: width)
+//    }
+//
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+//        return 1
+//    }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return images.count
@@ -150,4 +181,17 @@ extension PhotoSelectorController: UICollectionViewDelegateFlowLayout {
         cell.photoImageView.image = images[indexPath.item]
         return cell
     }
+}
+
+extension PhotoSelectorController: MosiacLayoutDelegate {
+    func collectionView(heightForTabBar collectionView: UICollectionView) -> CGFloat {
+        topbarHeight
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, heightForHeader indexPath: IndexPath) -> CGFloat {
+        guard let selectedImage = selectedImage else { return 0 }
+        return collectionView.frame.width/selectedImage.size.width * selectedImage.size.height
+    }
+    
+    
 }
