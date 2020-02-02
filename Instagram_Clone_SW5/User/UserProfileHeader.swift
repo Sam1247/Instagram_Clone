@@ -12,6 +12,8 @@ class UserProfileHeader: UICollectionViewCell {
         }
     }
     
+    var heightForBio: CGFloat?
+    
     var delegate: UserProfileHeaderDelegate?
     
     fileprivate func setupEditFollowButton() {
@@ -96,7 +98,7 @@ class UserProfileHeader: UICollectionViewCell {
     
     let profileImageView: CustomImageView = {
         let iv = CustomImageView()
-        iv.layer.cornerRadius = 80 / 2
+        iv.layer.cornerRadius = 100 / 2
         iv.clipsToBounds = true
         return iv
     }()
@@ -135,10 +137,22 @@ class UserProfileHeader: UICollectionViewCell {
         return button
     }()
     
+    lazy var userBio: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 14)
+        label.textColor = .black
+        label.numberOfLines = 0
+        label.baselineAdjustment = .none
+
+        label.text = "Tech enthusiast, Aspiring iOS developer, Computer Engineering student and Rock Music lover."
+        //heightForBio = getEstimatedHeight(with: label.text ?? "")
+        return label
+    }()
+    
     let usernameLabel: UILabel = {
         let label = UILabel()
         label.text = "username"
-        label.font = UIFont.boldSystemFont(ofSize: 14)
+        label.font = UIFont.boldSystemFont(ofSize: 16)
         return label
     }()
     
@@ -196,17 +210,20 @@ class UserProfileHeader: UICollectionViewCell {
     
     private func sharedInit() {
         addSubview(profileImageView)
-        profileImageView.anchor(top: topAnchor, left: leftAnchor, bottom: nil, right: nil, paddingTop: 12, paddingLeft: 12, paddingBottom: 0, paddingRight: 0, width: 80, height: 80)
+        profileImageView.anchor(top: topAnchor, left: leftAnchor, bottom: nil, right: nil, paddingTop: 12, paddingLeft: 12, paddingBottom: 0, paddingRight: 0, width: 100, height: 100)
         
         setupBottomToolbar()
         
         addSubview(usernameLabel)
-        usernameLabel.anchor(top: profileImageView.bottomAnchor, left: leftAnchor, bottom: gridButton.topAnchor, right: rightAnchor, paddingTop: 4, paddingLeft: 12, paddingBottom: 0, paddingRight: 12, width: 0, height: 0)
+        usernameLabel.anchor(top: profileImageView.bottomAnchor, left: leftAnchor, bottom: nil, right: rightAnchor, paddingTop: 4, paddingLeft: 16, paddingBottom: 0, paddingRight: 12, width: 0, height: 20)
         
         setupUserStatsView()
         
         addSubview(editProfileFollowButton)
         editProfileFollowButton.anchor(top: postsLabel.bottomAnchor, left: postsLabel.leftAnchor, bottom: nil, right: followingLabel.rightAnchor, paddingTop: 2, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 34)
+        //
+        addSubview(userBio)
+        userBio.anchor(top: usernameLabel.bottomAnchor, left: usernameLabel.leftAnchor, bottom: gridButton.topAnchor, right: rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 12, width: 0, height: 0)
     }
     
     fileprivate func setupUserStatsView() {

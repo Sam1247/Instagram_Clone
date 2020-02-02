@@ -109,12 +109,23 @@ class HomeController: UICollectionViewController, HomePostCellDelegate {
 }
 
 extension HomeController: UICollectionViewDelegateFlowLayout {
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let commentString = posts[indexPath.item].caption
+        let estimateHeight = getEstimatedHeight(with: commentString)
         var height: CGFloat = 40 + 8 + 8 //username and userProfileImageView
         height += view.frame.width
         height += 50
         height += 60
+        height += estimateHeight
         return CGSize(width: view.frame.width, height: height)
+    }
+    
+    private func getEstimatedHeight(with string: String) -> CGFloat {
+        let size = CGSize(width: view.frame.width, height: 1000)
+        let attributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 12)]
+        let estimatedSize = NSString(string: string).boundingRect(with: size, options: .usesLineFragmentOrigin, attributes: attributes, context: nil)
+        return estimatedSize.height
     }
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {

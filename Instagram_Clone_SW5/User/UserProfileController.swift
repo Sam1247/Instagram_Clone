@@ -116,15 +116,18 @@ class UserProfileController: UICollectionViewController {
         present(alertController, animated: true, completion: nil)
     }
     
+    weak var userProfileHeader: UserProfileHeader!
+    
     override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "headerId", for: indexPath) as! UserProfileHeader
+        userProfileHeader = header
         header.user = self.user
         header.delegate = self
         return header
     }
     
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        return CGSize(width: view.frame.width, height: 200)
+        return CGSize(width: view.frame.width, height: 250)
     }
 
     
