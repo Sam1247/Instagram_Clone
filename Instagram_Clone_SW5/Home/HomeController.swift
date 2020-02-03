@@ -22,12 +22,13 @@ class HomeController: UICollectionViewController, HomePostCellDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         collectionView?.prefetchDataSource = self
-        collectionView?.backgroundColor = .secondarySystemBackground
+        collectionView?.backgroundColor = .systemBackground
         collectionView?.register(HomePostCell.self, forCellWithReuseIdentifier: cellId)
         NotificationCenter.default.addObserver(self, selector: #selector(handleUpdateFeed), name: SharePhotoController.updateFeedNotificationName, object: nil)
         refreshControl.addTarget(self, action: #selector(refresh), for: .valueChanged)
         collectionView?.refreshControl = refreshControl
         setupNavigationItems()
+        posts.removeAll()
         fetchAllPosts()
     }
     

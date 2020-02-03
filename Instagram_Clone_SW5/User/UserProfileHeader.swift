@@ -132,13 +132,6 @@ class UserProfileHeader: UICollectionViewCell {
         listButton.setImage(UIImage(systemName: "rectangle.grid.1x2")!.withTintColor(.label, renderingMode: .alwaysOriginal), for: .normal)
         delegate?.didChangeToListView()
     }
-
-    let bookmarkButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setImage(#imageLiteral(resourceName: "ribbon"), for: .normal)
-        button.tintColor = UIColor(white: 0, alpha: 0.2)
-        return button
-    }()
     
     lazy var userBio: UILabel = {
         let label = UILabel()

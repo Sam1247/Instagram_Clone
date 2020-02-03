@@ -29,7 +29,6 @@ class UserSearchController: UICollectionViewController {
         let sb = UISearchBar()
         sb.placeholder = "Enter username"
         sb.barTintColor = .gray
-//        UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).backgroundColor = UIColor.rgb(red: 240, green: 240, blue: 240)
         sb.delegate = self
         return sb
     }()
@@ -51,7 +50,6 @@ class UserSearchController: UICollectionViewController {
                 return user1.username.compare(user2.username) == .orderedAscending
             })
             self.filteredUsers = self.users
-            self.collectionView?.reloadData()
          }) { (err) in
             print("Failed to fetch users for search:", err)
         }
