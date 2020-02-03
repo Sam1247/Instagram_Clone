@@ -18,7 +18,7 @@
 | <img src="images/profileGrid.png" width="350"> | <img src="images/profile.png" width="350"> | 
 |:---:|:---:|
 
-# Custom Mosiac Layout
+# Custom Mosiac Image Picker
 
 | <img src="images/imagePicker1.png" width="350"> | <img src="images/imagePicker2.png" width="350"> | 
 |:---:|:---:|
@@ -28,6 +28,21 @@
 
 | <img src="images/search.png" width="350"> | <img src="images/comments.png" width="350"> | 
 |:---:|:---:|
+
+# Features
+* Dark Mode
+* Building Fancy custom UICollectionViewLayout from scratch
+* prefetching "create operations in background to fetch Home Feed cells that about to display"
+* Dynamic sizing Cells
+
+# TODO
+* Perform delete post
+* Implement Chat 
+* Implement Home Feed Pagination queries
+* Use diffable data source API introduced in iOS 13 in Search Controller
+* Implement Stories
+
+
 
 
 
