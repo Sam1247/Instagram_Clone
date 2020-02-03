@@ -22,7 +22,7 @@ class HomeController: UICollectionViewController, HomePostCellDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         collectionView?.prefetchDataSource = self
-        collectionView?.backgroundColor = .white
+        collectionView?.backgroundColor = .secondarySystemBackground
         collectionView?.register(HomePostCell.self, forCellWithReuseIdentifier: cellId)
         NotificationCenter.default.addObserver(self, selector: #selector(handleUpdateFeed), name: SharePhotoController.updateFeedNotificationName, object: nil)
         refreshControl.addTarget(self, action: #selector(refresh), for: .valueChanged)
@@ -103,7 +103,11 @@ class HomeController: UICollectionViewController, HomePostCellDelegate {
     }
     
     func setupNavigationItems() {
-        navigationItem.titleView = UIImageView(image: #imageLiteral(resourceName: "logo"))
+        let image = #imageLiteral(resourceName: "logo")
+        let tintImage = image.withRenderingMode(.alwaysTemplate)
+        let imageView = UIImageView(image: tintImage)
+        imageView.tintColor = .label
+        navigationItem.titleView = imageView
     }
 
 }
@@ -112,20 +116,13 @@ extension HomeController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let commentString = posts[indexPath.item].caption
-        let estimateHeight = getEstimatedHeight(with: commentString)
+        let estimateHeight = commentString.getEdtimatedHeight(width: view.frame.width)
         var height: CGFloat = 40 + 8 + 8 //username and userProfileImageView
         height += view.frame.width
         height += 50
         height += 60
         height += estimateHeight
         return CGSize(width: view.frame.width, height: height)
-    }
-    
-    private func getEstimatedHeight(with string: String) -> CGFloat {
-        let size = CGSize(width: view.frame.width, height: 1000)
-        let attributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 12)]
-        let estimatedSize = NSString(string: string).boundingRect(with: size, options: .usesLineFragmentOrigin, attributes: attributes, context: nil)
-        return estimatedSize.height
     }
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -154,6 +151,7 @@ extension HomeController: UICollectionViewDelegateFlowLayout {
     func didTapComment(post: Post) {
         let commentsController = CommentsController(collectionViewLayout: UICollectionViewFlowLayout())
         commentsController.post = post
+        commentsController.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(commentsController, animated: true)
     }
     
@@ -198,7 +196,7 @@ extension HomeController: UICollectionViewDataSourcePrefetching {
             for indexPath in indexPaths {
                 let imageUrl = posts[indexPath.row].imageUrl
                 if imageCache[imageUrl] == nil {
-                    print("loading indexpath: \(indexPath)")
+                    //print("loading indexpath: \(indexPath)")
                     let dataPrefetcher = DataPrefetchOperation(with: imageUrl)
                     loadingPhotosQueue.addOperation(dataPrefetcher)
                     loadingPhotosOperations[indexPath] = dataPrefetcher
@@ -213,7 +211,7 @@ extension HomeController: UICollectionViewDataSourcePrefetching {
             if let dataPrefetcher = loadingPhotosOperations[indexPath] {
                 dataPrefetcher.cancel()
                 loadingPhotosOperations.removeValue(forKey: indexPath)
-                print("cancel loading indexpath: \(indexPath)")
+                //print("cancel loading indexpath: \(indexPath)")
             }
         }
     }

@@ -14,8 +14,8 @@ class CommentCell: UICollectionViewCell {
         didSet {
             guard let comment = comment else { return }
             
-            let attributedText = NSMutableAttributedString(string: comment.user.username, attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 14)])
-            attributedText.append(NSAttributedString(string: " " + comment.text, attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14)]))
+            let attributedText = NSMutableAttributedString(string: comment.user.username, attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 14), NSAttributedString.Key.foregroundColor: UIColor.label])
+            attributedText.append(NSAttributedString(string: " " + comment.text, attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14), NSAttributedString.Key.foregroundColor: UIColor.secondaryLabel]))
 
             textView.attributedText = attributedText
             profileImageView.loadImage(urlString: comment.user.profileImageUrl)
@@ -43,6 +43,8 @@ class CommentCell: UICollectionViewCell {
     
     let textView: UITextView = {
         let textView = UITextView()
+        textView.backgroundColor = .tertiarySystemBackground
+        textView.layer.cornerRadius = 12
         textView.font = UIFont.systemFont(ofSize: 14)
         textView.isScrollEnabled = false
         return textView

@@ -32,26 +32,22 @@ class MainTabBarController: UITabBarController {
     
     func setupViewControllers() {
         //home
-        let homeNavController = templateNavController(unselectedImage: #imageLiteral(resourceName: "home_unselected"), selectedImage: #imageLiteral(resourceName: "home_selected"), rootViewController: HomeController(collectionViewLayout: UICollectionViewFlowLayout()))
+        let layout = UICollectionViewFlowLayout ()
+        layout.minimumLineSpacing = 0
+        let homeNavController = templateNavController(unselectedImage: UIImage(systemName: "house")!.withTintColor(.label, renderingMode: .alwaysOriginal), selectedImage: UIImage(systemName: "house.fill")!.withTintColor(.label, renderingMode: .alwaysOriginal), rootViewController: HomeController(collectionViewLayout: layout))
         //search
-        let searchNavController = templateNavController(unselectedImage: #imageLiteral(resourceName: "search_unselected"), selectedImage: #imageLiteral(resourceName: "search_selected"), rootViewController: UserSearchController(collectionViewLayout: UICollectionViewFlowLayout()))
+        let config = UIImage.SymbolConfiguration(weight: .bold)
+        let searchNavController = templateNavController(unselectedImage: UIImage(systemName: "magnifyingglass")!.withTintColor(.label, renderingMode: .alwaysOriginal), selectedImage: UIImage(systemName: "magnifyingglass", withConfiguration: config)!.withTintColor(.label, renderingMode: .alwaysOriginal), rootViewController: UserSearchController(collectionViewLayout: UICollectionViewFlowLayout()))
         
-        let plusNavController = templateNavController(unselectedImage: #imageLiteral(resourceName: "plus_unselected"), selectedImage: #imageLiteral(resourceName: "plus_unselected"))
+        let plusNavController = templateNavController(unselectedImage: UIImage(systemName: "plus.square")!.withTintColor(.label, renderingMode: .alwaysOriginal), selectedImage: UIImage(systemName: "plus.square")!.withTintColor(.label, renderingMode: .alwaysOriginal))
         
-        let likeNavController = templateNavController(unselectedImage: #imageLiteral(resourceName: "like_unselected"), selectedImage: #imageLiteral(resourceName: "like_selected"))
+        let likeNavController = templateNavController(unselectedImage: UIImage(systemName: "heart")!.withTintColor(.label, renderingMode: .alwaysOriginal), selectedImage: UIImage(systemName: "heart.fill")!.withTintColor(.label, renderingMode: .alwaysOriginal))
         //user profile
-        let userProfileNavController = templateNavController(unselectedImage: #imageLiteral(resourceName: "profile_unselected"), selectedImage: #imageLiteral(resourceName: "profile_selected"), rootViewController: UserProfileController(collectionViewLayout: UICollectionViewFlowLayout()))
+        let userProfileNavController = templateNavController(unselectedImage: UIImage(systemName: "person")!.withTintColor(.label, renderingMode: .alwaysOriginal), selectedImage: UIImage(systemName: "person.fill")!.withTintColor(.label, renderingMode: .alwaysOriginal), rootViewController: UserProfileController(collectionViewLayout: UICollectionViewFlowLayout()))
         
         tabBar.tintColor = .black
         
         viewControllers = [homeNavController, searchNavController, plusNavController, likeNavController, userProfileNavController]
-        
-        //modify tab bar item insets
-        guard let items = tabBar.items else { return }
-        
-        items.forEach { item in
-            item.imageInsets = UIEdgeInsets(top: 4, left: 0, bottom: -4, right: 0)
-        }
     }
     
     fileprivate func templateNavController(unselectedImage: UIImage, selectedImage: UIImage, rootViewController: UIViewController = UIViewController()) -> UINavigationController {

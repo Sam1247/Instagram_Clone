@@ -15,6 +15,7 @@ class HomePostCell: UICollectionViewCell {
     let usernameLabel: UILabel = {
         let label = UILabel()
         label.text = "Username"
+        //label.backgroundColor = .red
         label.font = UIFont.boldSystemFont(ofSize: 14)
         return label
     }()
@@ -22,13 +23,13 @@ class HomePostCell: UICollectionViewCell {
     let optionsButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("•••", for: .normal)
-        button.setTitleColor(.black, for: .normal)
+        button.setTitleColor(.label, for: .normal)
         return button
     }()
 
     lazy var likeButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setImage(#imageLiteral(resourceName: "like_unselected").withRenderingMode(.alwaysOriginal), for: .normal)
+        button.setImage(UIImage(systemName: "heart")!.withTintColor(.label, renderingMode: .alwaysOriginal), for: .normal)
         button.addTarget(self, action: #selector(handleLike), for: .touchUpInside)
         return button
     }()
@@ -39,7 +40,7 @@ class HomePostCell: UICollectionViewCell {
 
     lazy var commentButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setImage(#imageLiteral(resourceName: "comment").withRenderingMode(.alwaysOriginal), for: .normal)
+        button.setImage(UIImage(systemName: "message")?.withTintColor(.label, renderingMode: .alwaysOriginal), for: .normal)
         button.addTarget(self, action: #selector(handleComment), for: .touchUpInside)
         return button
     }()
@@ -51,13 +52,13 @@ class HomePostCell: UICollectionViewCell {
 
     let sendMessageButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setImage(#imageLiteral(resourceName: "send2").withRenderingMode(.alwaysOriginal), for: .normal)
+        button.setImage(UIImage(systemName: "paperplane")!.withTintColor(.label, renderingMode: .alwaysOriginal), for: .normal)
         return button
     }()
 
     let bookmarkButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setImage(#imageLiteral(resourceName: "ribbon").withRenderingMode(.alwaysOriginal), for: .normal)
+        button.setImage(UIImage(systemName: "bookmark")!.withTintColor(.label, renderingMode: .alwaysOriginal), for: .normal)
         return button
     }()
 
@@ -70,7 +71,7 @@ class HomePostCell: UICollectionViewCell {
     var post: Post? {
         didSet {
             guard let postImageUrl = post?.imageUrl else { return }
-            likeButton.setImage(post?.hasLiked == true ? #imageLiteral(resourceName: "like_selected").withRenderingMode(.alwaysOriginal) : #imageLiteral(resourceName: "like_unselected").withRenderingMode(.alwaysOriginal), for: .normal)
+            likeButton.setImage(post?.hasLiked == true ? UIImage(systemName: "heart.fill")!.withTintColor(.systemRed, renderingMode: .alwaysOriginal) : UIImage(systemName: "heart")!.withTintColor(.label, renderingMode: .alwaysOriginal), for: .normal)
             photoImageView.loadImage(urlString: postImageUrl)
             guard let profileImageUrl = post?.user.profileImageUrl else { return }
             usernameLabel.text = post!.user.username
@@ -118,6 +119,7 @@ class HomePostCell: UICollectionViewCell {
     }
 
     private func sharedInit() {
+        backgroundColor = UIColor.systemBackground
         addSubview(photoImageView)
         addSubview(usernameLabel)
         addSubview(optionsButton)

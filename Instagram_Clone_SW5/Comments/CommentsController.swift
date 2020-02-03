@@ -17,19 +17,9 @@ class CommentsController: UICollectionViewController, UICollectionViewDelegateFl
 
     let cellId = "cellId"
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        tabBarController?.tabBar.isHidden = true
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        tabBarController?.tabBar.isHidden = false
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        collectionView?.backgroundColor = .white
+        collectionView?.backgroundColor = .secondarySystemBackground
         navigationItem.title = "Comments"
         collectionView?.alwaysBounceVertical = true
         collectionView?.keyboardDismissMode = .interactive

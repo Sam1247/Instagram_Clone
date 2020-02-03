@@ -17,7 +17,7 @@ class UserSearchController: UICollectionViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        collectionView?.backgroundColor = .white
+        collectionView?.backgroundColor = .systemBackground
         navigationItem.titleView = searchBar
         collectionView?.register(UserSearchCell.self, forCellWithReuseIdentifier: cellId)
         collectionView?.alwaysBounceVertical = true

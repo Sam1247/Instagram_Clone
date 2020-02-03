@@ -45,6 +45,16 @@ class SignUpController: UIViewController, UIImagePickerControllerDelegate, UINav
         tf.addTarget(self, action: #selector(handleTextInputchange), for: .editingChanged)
         return tf
     }()
+    
+    let bioTextField: UITextField = {
+        let tf = UITextField()
+        tf.placeholder = "Bio"
+        tf.backgroundColor = UIColor(white: 0, alpha: 0.03)
+        tf.borderStyle = .roundedRect
+        tf.font = UIFont.systemFont(ofSize: 14)
+        tf.addTarget(self, action: #selector(handleTextInputchange), for: .editingChanged)
+        return tf
+    }()
 
     let passwordTextField: UITextField = {
         let tf = UITextField()
@@ -88,13 +98,13 @@ class SignUpController: UIViewController, UIImagePickerControllerDelegate, UINav
         photoButton.anchor(top: view.topAnchor, left: nil, bottom: nil, right: nil, paddingTop: 150, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 140, height: 140)
         photoButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         
-        let stackview = UIStackView(arrangedSubviews: [emailTextField, usernameTextField, passwordTextField, signUpButton])
+        let stackview = UIStackView(arrangedSubviews: [emailTextField, usernameTextField, passwordTextField, bioTextField, signUpButton])
         stackview.distribution = .fillEqually
         stackview.axis = .vertical
         stackview.spacing = 10
         view.addSubview(stackview)
         
-        stackview.anchor(top: photoButton.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 40, paddingLeft: 40, paddingBottom: 0, paddingRight: 40, width: 0, height: 200)
+        stackview.anchor(top: photoButton.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 40, paddingLeft: 40, paddingBottom: 0, paddingRight: 40, width: 0, height: 250)
     }
     
     @objc
@@ -136,8 +146,9 @@ class SignUpController: UIViewController, UIImagePickerControllerDelegate, UINav
         guard let email = emailTextField.text, !email.isEmpty else { return }
         guard let username = usernameTextField.text, !username.isEmpty else { return }
         guard let password = passwordTextField.text, !password.isEmpty else { return }
+        guard let bio = bioTextField.text, !bio.isEmpty else { return }
         
-        Auth.auth().createUser(withEmail: email, username: username, password: password, image: photoButton.imageView?.image) { (err) in
+        Auth.auth().createUser(with: email, username: username, password: password, bio: bio, image: photoButton.imageView?.image) { (err) in
             if let err = err {
                 print("Failed to sign up user:", err)
                 self.emailTextField.text = ""

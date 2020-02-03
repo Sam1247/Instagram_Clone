@@ -23,8 +23,8 @@ class SharePhotoController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor.rgb(red: 240, green: 240, blue: 240)
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Share", style: .plain, target: self, action: #selector(handleShare))
+        view.backgroundColor = .systemBackground
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Share", style: .done, target: self, action: #selector(handleShare))
         setupViews()
     }
     
@@ -34,7 +34,7 @@ class SharePhotoController: UIViewController {
     @objc private func handleShare() {
         guard let caption = textView.text, !caption.isEmpty else { return }
         guard let image = selectedImage else { return }
-        guard let uploadData = image.jpegData(compressionQuality: 0.1) else { return }
+        guard let uploadData = image.jpegData(compressionQuality: 0.7) else { return }
         navigationItem.rightBarButtonItem?.isEnabled = false
         let filename = NSUUID().uuidString
         let storageRef = Storage.storage().reference().child("posts").child(filename)
@@ -77,7 +77,6 @@ class SharePhotoController: UIViewController {
 
     let imageView: UIImageView = {
         let iv = UIImageView()
-        iv.backgroundColor = .red
         iv.contentMode = .scaleAspectFill
         iv.clipsToBounds = true
         return iv
@@ -85,13 +84,14 @@ class SharePhotoController: UIViewController {
 
     let textView: UITextView = {
         let tv = UITextView()
+        tv.backgroundColor = .secondarySystemBackground
         tv.font = UIFont.systemFont(ofSize: 14)
         return tv
     }()
 
     private func setupViews() {
         let containerView = UIView()
-        containerView.backgroundColor = .white
+        containerView.backgroundColor = .secondarySystemBackground
         view.addSubview(containerView)
         containerView.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.safeAreaLayoutGuide.leftAnchor, bottom: nil, right: view.safeAreaLayoutGuide.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 100)
 

@@ -60,3 +60,13 @@ extension Date {
         }
     }
 }
+
+
+extension String {
+    func getEdtimatedHeight(width: CGFloat) -> CGFloat {
+        let size = CGSize(width: width, height: 1000)
+        let attributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 12)]
+        let estimatedSize = NSString(string: self).boundingRect(with: size, options: .usesLineFragmentOrigin, attributes: attributes, context: nil)
+        return estimatedSize.height
+    }
+}

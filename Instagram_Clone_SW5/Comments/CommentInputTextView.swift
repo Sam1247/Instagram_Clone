@@ -32,6 +32,7 @@ class CommentInputTextView: UITextView {
     }
 
     private func sharedInit() {
+        backgroundColor = .tertiarySystemBackground
         //NotificationCenter.default.addObserver(self, selector: #selector(handleTextChange), name:  , object: nil)
         addSubview(placeholderLabel)
         placeholderLabel.anchor(top: topAnchor, left: leftAnchor, bottom: bottomAnchor, right: rightAnchor, paddingTop: 8, paddingLeft: 8, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)

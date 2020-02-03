@@ -11,6 +11,9 @@ import UIKit
 // image caching
 var imageCache = [String: UIImage]()
 
+var i = 0
+var j = 0
+
 
 class CustomImageView: UIImageView {
     
@@ -21,10 +24,13 @@ class CustomImageView: UIImageView {
         lastURLUsedToLoadImage = urlString
         self.image = nil
         if let cachedImage = imageCache[urlString] {
+            i += 1
+            print("Cache Hit: \(i)")
             self.image = cachedImage
             return
         }
-        
+        j += 1
+        print("Cache Miss: \(j)")
         guard let url = URL(string: urlString) else { return }
         URLSession.shared.dataTask(with: url) { (data, response, err) in
             if let err = err {

@@ -8,6 +8,7 @@ class UserProfileHeader: UICollectionViewCell {
             guard let profileImageUrl = user?.profileImageUrl else { return }
             profileImageView.loadImage(urlString: profileImageUrl)
             usernameLabel.text = user?.username
+            userBio.text = user?.bio
             setupEditFollowButton()
         }
     }
@@ -105,28 +106,30 @@ class UserProfileHeader: UICollectionViewCell {
     
     lazy var  gridButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setImage(#imageLiteral(resourceName: "grid"), for: .normal)
+        button.setImage(UIImage(systemName: "rectangle.split.3x3")!.withTintColor(.label, renderingMode: .alwaysOriginal), for: .normal)
+        //button.setImage(UIImage(systemName: "rectangle.split.3x3")!.withTintColor(.label, renderingMode: .alwaysOriginal), for: .selected)
         button.addTarget(self, action: #selector(handleChangeToGridView), for: .touchUpInside)
         return button
     }()
     
     @objc func handleChangeToGridView() {
-        gridButton.tintColor = UIColor.rgb(red: 17, green: 154, blue: 237)
-        listButton.tintColor = UIColor(white: 0, alpha: 0.2)
+        gridButton.setImage(UIImage(systemName: "rectangle.split.3x3")!.withTintColor(.label, renderingMode: .alwaysOriginal), for: .normal)
+        listButton.setImage(UIImage(systemName: "rectangle.grid.1x2")!.withTintColor(.secondaryLabel, renderingMode: .alwaysOriginal), for: .normal)
         delegate?.didChangeToGridView()
     }
     
     lazy var listButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setImage(#imageLiteral(resourceName: "list"), for: .normal)
+        button.setImage(UIImage(systemName: "rectangle.grid.1x2")!.withTintColor(.secondaryLabel, renderingMode: .alwaysOriginal), for: .normal)
+        //button.setImage(UIImage(systemName: "rectangle.grid.1x2")!.withTintColor(.label, renderingMode: .alwaysOriginal), for: .selected)
         button.tintColor = UIColor(white: 0, alpha: 0.2)
         button.addTarget(self, action: #selector(handleChangeToListView), for: .touchUpInside)
         return button
     }()
     
     @objc func handleChangeToListView() {
-        listButton.tintColor = UIColor.rgb(red: 17, green: 154, blue: 237)
-        gridButton.tintColor = UIColor(white: 0, alpha: 0.2)
+        gridButton.setImage(UIImage(systemName: "rectangle.split.3x3")!.withTintColor(.secondaryLabel, renderingMode: .alwaysOriginal), for: .normal)
+        listButton.setImage(UIImage(systemName: "rectangle.grid.1x2")!.withTintColor(.label, renderingMode: .alwaysOriginal), for: .normal)
         delegate?.didChangeToListView()
     }
 
@@ -140,12 +143,9 @@ class UserProfileHeader: UICollectionViewCell {
     lazy var userBio: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 14)
-        label.textColor = .black
+        label.textColor = .secondaryLabel
         label.numberOfLines = 0
         label.baselineAdjustment = .none
-
-        label.text = "Tech enthusiast, Aspiring iOS developer, Computer Engineering student and Rock Music lover."
-        //heightForBio = getEstimatedHeight(with: label.text ?? "")
         return label
     }()
     
@@ -189,9 +189,10 @@ class UserProfileHeader: UICollectionViewCell {
     lazy var editProfileFollowButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Edit Profile", for: .normal)
-        button.setTitleColor(.black, for: .normal)
+        button.setTitleColor(.label, for: .normal)
+        button.backgroundColor = .systemBackground
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
-        button.layer.borderColor = UIColor.lightGray.cgColor
+        button.layer.borderColor = UIColor.tertiaryLabel.cgColor
         button.layer.borderWidth = 1
         button.layer.cornerRadius = 3
         button.addTarget(self, action: #selector(handleEditProfileOrFollow), for: .touchUpInside)
@@ -220,7 +221,7 @@ class UserProfileHeader: UICollectionViewCell {
         setupUserStatsView()
         
         addSubview(editProfileFollowButton)
-        editProfileFollowButton.anchor(top: postsLabel.bottomAnchor, left: postsLabel.leftAnchor, bottom: nil, right: followingLabel.rightAnchor, paddingTop: 2, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 34)
+        editProfileFollowButton.anchor(top: postsLabel.bottomAnchor, left: postsLabel.leftAnchor, bottom: nil, right: followingLabel.rightAnchor, paddingTop: 16, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 34)
         //
         addSubview(userBio)
         userBio.anchor(top: usernameLabel.bottomAnchor, left: usernameLabel.leftAnchor, bottom: gridButton.topAnchor, right: rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 12, width: 0, height: 0)
@@ -237,12 +238,12 @@ class UserProfileHeader: UICollectionViewCell {
     fileprivate func setupBottomToolbar() {
         
         let topDividerView = UIView()
-        topDividerView.backgroundColor = .lightGray
+        topDividerView.backgroundColor = .tertiaryLabel
         
         let bottomDividerView = UIView()
-        bottomDividerView.backgroundColor = .lightGray
+        bottomDividerView.backgroundColor = .tertiaryLabel
         
-        let stackView = UIStackView(arrangedSubviews: [gridButton, listButton, bookmarkButton])
+        let stackView = UIStackView(arrangedSubviews: [gridButton, listButton])
         stackView.distribution = .fillEqually
         
         addSubview(stackView)
