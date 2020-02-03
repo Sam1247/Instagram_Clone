@@ -33,7 +33,7 @@ A clone of instagram iOS app created using Swift 5 and Firebase
 
 # Features
 * Dark Mode
-* Building Fancy custom UICollectionViewLayout from scratch
+* Building Fancy custom UICollectionViewLayout with stretchy header from scratch
 * prefetching "create operations in background to fetch Home Feed cells that about to display"
 * Dynamic sizing Cells
 
