@@ -1,6 +1,12 @@
 import UIKit
 import Firebase
 
+protocol UserProfileHeaderDelegate: AnyObject {
+    func didChangeToListView()
+    func didChangeToGridView()
+    func didTapFollowUnFollowButton()
+}
+
 class UserProfileHeader: UICollectionViewCell {
    
     var user: User? {
@@ -10,12 +16,36 @@ class UserProfileHeader: UICollectionViewCell {
             usernameLabel.text = user?.username
             userBio.text = user?.bio
             setupEditFollowButton()
+            setupFollowingAndFollowersButton()
         }
     }
     
     var heightForBio: CGFloat?
     
-    var delegate: UserProfileHeaderDelegate?
+    weak var delegate: UserProfileHeaderDelegate?
+    
+    private func setupFollowingAndFollowersButton() {
+        guard let user = user else { return }
+        
+        let followingCount = user.followingCount
+        let followersCount = user.followersCount
+        let postsCount = user.postsCount
+        //
+        let followersLabelAttributedString = NSMutableAttributedString(string: "\(followersCount)\n", attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 14)])
+        followersLabelAttributedString.append(NSAttributedString(string: "followers", attributes: [NSAttributedString.Key.foregroundColor: UIColor.lightGray, NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14)]))
+        self.followersLabel.attributedText = followersLabelAttributedString
+        //
+        
+        let postsLabelAttributedString = NSMutableAttributedString(string: "\(postsCount)\n", attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 14)])
+        postsLabelAttributedString.append(NSAttributedString(string: "posts", attributes: [NSAttributedString.Key.foregroundColor: UIColor.lightGray, NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14)]))
+        self.postsLabel.attributedText = postsLabelAttributedString
+        //
+        
+        let followingLabelAttributedString = NSMutableAttributedString(string: "\(followingCount)\n", attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 14)])
+        followingLabelAttributedString.append(NSAttributedString(string: "following", attributes: [NSAttributedString.Key.foregroundColor: UIColor.lightGray, NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14)]))
+        self.followingLabel.attributedText = followingLabelAttributedString
+        
+    }
     
     fileprivate func setupEditFollowButton() {
         guard let currentLoggedInUserId = Auth.auth().currentUser?.uid else { return }
@@ -23,6 +53,7 @@ class UserProfileHeader: UICollectionViewCell {
         
         if currentLoggedInUserId == userId {
             //edit
+            editProfileFollowButton.setTitle("Edit Profile", for: .normal)
         } else {
             // check if following
             Database.database().reference().child("following").child(currentLoggedInUserId).child(userId).observeSingleEvent(of: .value, with: { (snapshot) in
@@ -38,61 +69,35 @@ class UserProfileHeader: UICollectionViewCell {
     }
     
     @objc func handleEditProfileOrFollow() {
-        guard let currentLoggedInUserId = Auth.auth().currentUser?.uid else { return }
+        delegate?.didTapFollowUnFollowButton()
         
-        guard let userId = user?.uid else { return }
-
         if editProfileFollowButton.titleLabel?.text == "Unfollow" {
             //unfollow
-            
-            Database.database().reference().child("following").child(currentLoggedInUserId).child(userId).removeValue { (err, ref) in
-                if let err = err {
-                    print("Failed to unfollow user:", err)
-                    return
-                }
-                
-                //
-                
-                let attributedText = NSMutableAttributedString(string: "0\n", attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 14)])
-                attributedText.append(NSAttributedString(string: "followers", attributes: [NSAttributedString.Key.foregroundColor: UIColor.lightGray, NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14)]))
-                
-                self.followersLabel.attributedText = attributedText
-                
-                
-                print("Sucessfully unfollowed user:", self.user?.username ?? "")
-                
-                self.setupFollowStyle()
-            }
-            
+            self.user!.followersCount -= 1
+            let attributedText = NSMutableAttributedString(string: "\(self.user!.followersCount)\n", attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 14)])
+            attributedText.append(NSAttributedString(string: "followers", attributes: [NSAttributedString.Key.foregroundColor: UIColor.lightGray, NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14)]))
+            self.followersLabel.attributedText = attributedText
+            print("Sucessfully unfollowed user:", self.user!.username)
+            self.setupFollowStyle()
         } else {
-            //follow
-            let ref = Database.database().reference().child("following").child(currentLoggedInUserId)
-            
-            let values = [userId: 1]
-            ref.updateChildValues(values) { (err, ref) in
-                if let err = err {
-                    print("Failed to follow user:", err)
-                    return
-                }
-                
-                //
-                let attributedText = NSMutableAttributedString(string: "1\n", attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 14)])
-                attributedText.append(NSAttributedString(string: "followers", attributes: [NSAttributedString.Key.foregroundColor: UIColor.lightGray, NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14)]))
-                
-                self.followersLabel.attributedText = attributedText
-                
-                print("Sucessfully followed user: ", self.user?.username ?? "")
-                
-                self.editProfileFollowButton.setTitle("Unfollow", for: .normal)
-                self.editProfileFollowButton.backgroundColor = .white
-                self.editProfileFollowButton.setTitleColor(.black, for: .normal)
-            }
+            self.user!.followersCount += 1
+                     //
+            let attributedText = NSMutableAttributedString(string: "\(self.user!.followersCount)\n", attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 14)])
+            attributedText.append(NSAttributedString(string: "followers", attributes: [NSAttributedString.Key.foregroundColor: UIColor.lightGray, NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14)]))
+            self.followersLabel.attributedText = attributedText
+            print("Sucessfully followed user: ", self.user?.username ?? "")
+            self.editProfileFollowButton.setTitle("Unfollow", for: .normal)
+            self.editProfileFollowButton.backgroundColor = .systemBackground
+            self.editProfileFollowButton.layer.borderColor = UIColor.tertiaryLabel.cgColor
+            self.editProfileFollowButton.layer.borderWidth = 1
+            self.editProfileFollowButton.layer.cornerRadius = 3
+            self.editProfileFollowButton.setTitleColor(.label, for: .normal)
         }
     }
     
     fileprivate func setupFollowStyle() {
         editProfileFollowButton.setTitle(("Follow"), for: .normal)
-        editProfileFollowButton.backgroundColor = UIColor.rgb(red: 17, green: 154, blue: 237)
+        editProfileFollowButton.backgroundColor = UIColor.systemBlue
         editProfileFollowButton.setTitleColor(.white, for: .normal)
         editProfileFollowButton.layer.borderColor = UIColor(white: 0, alpha: 0.2).cgColor
     }
@@ -181,7 +186,6 @@ class UserProfileHeader: UICollectionViewCell {
     
     lazy var editProfileFollowButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Edit Profile", for: .normal)
         button.setTitleColor(.label, for: .normal)
         button.backgroundColor = .systemBackground
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)

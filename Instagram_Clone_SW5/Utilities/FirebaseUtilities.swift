@@ -68,10 +68,13 @@ extension Database {
     }
     
     fileprivate func uploadUser(withUID uid: String, username: String, profileImageUrl: String? = nil, bio: String, completion: @escaping (Error?) -> () ) {
-        var dictionaryValues = ["username": username, "bio": bio]
+        var dictionaryValues:[String:Any] = ["username": username, "bio": bio]
         if profileImageUrl != nil {
             dictionaryValues["profileImageUrl"] = profileImageUrl
         }
+        dictionaryValues["followingCount"] = 0
+        dictionaryValues["followersCount"] = 0
+        dictionaryValues["postsCount"] = 0
         
         let values = [uid: dictionaryValues]
         Database.database().reference().child("users").updateChildValues(values, withCompletionBlock: { (err, ref) in
@@ -87,10 +90,7 @@ protocol HomePostCellDelegate {
     func didLike(for cell: HomePostCell)
 }
 
-protocol UserProfileHeaderDelegate {
-    func didChangeToListView()
-    func didChangeToGridView()
-}
+
 
 protocol CommentInputAccessoryViewDelegate {
     func didSubmit(for comment: String)

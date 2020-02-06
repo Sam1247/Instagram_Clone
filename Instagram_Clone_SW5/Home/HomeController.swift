@@ -27,9 +27,22 @@ class HomeController: UICollectionViewController, HomePostCellDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(handleUpdateFeed), name: SharePhotoController.updateFeedNotificationName, object: nil)
         refreshControl.addTarget(self, action: #selector(refresh), for: .valueChanged)
         collectionView?.refreshControl = refreshControl
+        setupDMbarbuttomItem()
         setupNavigationItems()
         posts.removeAll()
         fetchAllPosts()
+    }
+    
+    private func setupDMbarbuttomItem () {
+        let button = UIBarButtonItem(image: UIImage(systemName: "paperplane")?.withTintColor(.label, renderingMode: .alwaysOriginal), style: .plain, target: self, action: #selector(showDMController))
+        self.navigationItem.rightBarButtonItem = button
+    }
+    
+    @objc
+    private func showDMController() {
+        let DMTVC = DMtableViewController()
+        DMTVC.hidesBottomBarWhenPushed = true
+        navigationController?.pushViewController(DMTVC, animated: true)
     }
     
     fileprivate func fetchAllPosts() {

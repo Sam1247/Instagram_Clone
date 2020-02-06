@@ -9,6 +9,7 @@
 import UIKit
 import Firebase
 
+
 class UserProfileController: UICollectionViewController {
     
     var user: User?
@@ -19,17 +20,27 @@ class UserProfileController: UICollectionViewController {
     let homePostCellId = "homePostCellId"
     
     var isGridView: Bool = true
-    var isFinishedPaging = false
 
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         collectionView?.backgroundColor = .systemBackground
         collectionView?.register(UserProfilePhotoCell.self, forCellWithReuseIdentifier: cellId)
         collectionView?.register(HomePostCell.self, forCellWithReuseIdentifier: homePostCellId)
         collectionView?.register(UserProfileHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "headerId")
         setupLogOutButton()
         fetchUser()
+    }
+    
+    fileprivate func fetchUser() {
+        let uid = userId ?? (Auth.auth().currentUser?.uid ?? "")
+        Database.fetchUserWithUID(uid: uid) { (user) in
+            self.user = user
+            self.navigationItem.title = self.user?.username
+            self.collectionView?.reloadData()
+            self.fetchOrderedPosts()
+        }
     }
     
     fileprivate func fetchOrderedPosts() {
@@ -68,10 +79,11 @@ class UserProfileController: UICollectionViewController {
         present(alertController, animated: true, completion: nil)
     }
     
-    weak var userProfileHeader: UserProfileHeader!
+    weak var userProfileHeader: UserProfileHeader?
     
     override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "headerId", for: indexPath) as! UserProfileHeader
+        self.userProfileHeader = header
         header.user = self.user
         header.delegate = self
         return header
@@ -83,15 +95,7 @@ class UserProfileController: UICollectionViewController {
         return CGSize(width: view.frame.width, height: 220 + estimatedHeight + 10)
     }
     
-    fileprivate func fetchUser() {
-        let uid = userId ?? (Auth.auth().currentUser?.uid ?? "")
-        Database.fetchUserWithUID(uid: uid) { (user) in
-            self.user = user
-            self.navigationItem.title = self.user?.username
-            self.collectionView?.reloadData()
-            self.fetchOrderedPosts()
-        }
-    }
+    
 }
 
 extension UserProfileController: UICollectionViewDelegateFlowLayout {
@@ -136,6 +140,44 @@ extension UserProfileController: UICollectionViewDelegateFlowLayout {
 
 extension UserProfileController: UserProfileHeaderDelegate {
     
+    func didTapFollowUnFollowButton() {
+        print("pressed!")
+        guard let currentLoggedInUserId = Auth.auth().currentUser?.uid else { return }
+        guard let userId = user?.uid else { return }
+        guard userId != currentLoggedInUserId else { return }
+        
+        if self.userProfileHeader?.editProfileFollowButton.titleLabel?.text == "Unfollow" {
+            Database.database().reference().child("following").child(currentLoggedInUserId).child(userId).removeValue { (err, ref) in
+                if let err = err {
+                    print("Failed to unfollow user:", err)
+                    return
+                }
+                self.user!.followersCount -= 1
+                // update users data
+                Database.database().reference().child("users").child(userId).updateChildValues(["followersCount": self.user!.followersCount])
+            }
+            // update followers list
+        Database.database().reference().child("followers").child(userId).child(currentLoggedInUserId).removeValue()
+        } else {
+            // update following list
+            let followingRef = Database.database().reference().child("following").child(currentLoggedInUserId)
+            let values = [userId: 1]
+            followingRef.updateChildValues(values) { (err, ref) in
+                if let err = err {
+                    print("Failed to follow user:", err)
+                    return
+                }
+                self.user!.followersCount += 1
+                // update users data
+                Database.database().reference().child("users").child(userId).updateChildValues(["followersCount": self.user!.followersCount])
+            }
+            // update followers list
+            let followersRef = Database.database().reference().child("followers").child(userId)
+            followersRef.updateChildValues([currentLoggedInUserId: 1])
+
+        }
+    }
+    
     func didChangeToGridView() {
         isGridView = true
         collectionView?.reloadData()
@@ -148,3 +190,4 @@ extension UserProfileController: UserProfileHeaderDelegate {
     
     
 }
+

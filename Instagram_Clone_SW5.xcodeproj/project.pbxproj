@@ -17,6 +17,7 @@
 		20462A84238AB9D300A2BECC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 20462A82238AB9D300A2BECC /* LaunchScreen.storyboard */; };
 		20462A8C238ABA2700A2BECC /* SignUpController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20462A8B238ABA2700A2BECC /* SignUpController.swift */; };
 		20462A8E238ABAAE00A2BECC /* Extentions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20462A8D238ABAAE00A2BECC /* Extentions.swift */; };
+		2049E57723EB850F00026B6E /* DMtableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2049E57623EB850F00026B6E /* DMtableViewController.swift */; };
 		208696F5238AD0A1005BE549 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 208696F4238AD0A1005BE549 /* GoogleService-Info.plist */; };
 		20884304238B21F800D5EBE6 /* SharePhotoController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20884303238B21F800D5EBE6 /* SharePhotoController.swift */; };
 		20884306238B371E00D5EBE6 /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20884305238B371E00D5EBE6 /* Post.swift */; };
@@ -55,6 +56,7 @@
 		20462A85238AB9D300A2BECC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		20462A8B238ABA2700A2BECC /* SignUpController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpController.swift; sourceTree = "<group>"; };
 		20462A8D238ABAAE00A2BECC /* Extentions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extentions.swift; sourceTree = "<group>"; };
+		2049E57623EB850F00026B6E /* DMtableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DMtableViewController.swift; sourceTree = "<group>"; };
 		208696F4238AD0A1005BE549 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		20884303238B21F800D5EBE6 /* SharePhotoController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharePhotoController.swift; sourceTree = "<group>"; };
 		20884305238B371E00D5EBE6 /* Post.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
@@ -153,6 +155,7 @@
 			isa = PBXGroup;
 			children = (
 				2002FD0A238AE4AF00B13F05 /* MainTabBarController.swift */,
+				2049E57523EB84DD00026B6E /* DM */,
 				20BB562E23DB2453007A418C /* Comments */,
 				2090A40C238DB0C500FBACB0 /* User */,
 				20945A6B238C6FB0007694EB /* User Search */,
@@ -168,6 +171,14 @@
 				208696F4238AD0A1005BE549 /* GoogleService-Info.plist */,
 			);
 			path = Instagram_Clone_SW5;
+			sourceTree = "<group>";
+		};
+		2049E57523EB84DD00026B6E /* DM */ = {
+			isa = PBXGroup;
+			children = (
+				2049E57623EB850F00026B6E /* DMtableViewController.swift */,
+			);
+			path = DM;
 			sourceTree = "<group>";
 		};
 		2088430B238B4BA900D5EBE6 /* Home */ = {
@@ -413,6 +424,7 @@
 				20A61C59238B0FFC00D67F74 /* PhotoSelectorController.swift in Sources */,
 				2002FD0F238AE58F00B13F05 /* User.swift in Sources */,
 				20945A6D238C7016007694EB /* UserSearchCell.swift in Sources */,
+				2049E57723EB850F00026B6E /* DMtableViewController.swift in Sources */,
 				20EACCCF23DC364000FD431F /* CommentInputTextView.swift in Sources */,
 				20A61C57238B0F8D00D67F74 /* PhotoSelectorCell.swift in Sources */,
 			);
