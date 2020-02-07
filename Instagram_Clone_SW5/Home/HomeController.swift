@@ -18,6 +18,11 @@ class HomeController: UICollectionViewController, HomePostCellDelegate {
     
     let loadingPhotosQueue = OperationQueue()
     var loadingPhotosOperations: [IndexPath: DataPrefetchOperation] = [:]
+    
+    // paginations properties
+    var fetchingMore = false
+    var endReached = false
+    let leadingScreenForBatching:CGFloat = 3
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,8 +34,7 @@ class HomeController: UICollectionViewController, HomePostCellDelegate {
         collectionView?.refreshControl = refreshControl
         setupDMbarbuttomItem()
         setupNavigationItems()
-        posts.removeAll()
-        fetchAllPosts()
+        beginBatchFetch()
     }
     
     private func setupDMbarbuttomItem () {
@@ -45,76 +49,52 @@ class HomeController: UICollectionViewController, HomePostCellDelegate {
         navigationController?.pushViewController(DMTVC, animated: true)
     }
     
-    fileprivate func fetchAllPosts() {
-        fetchPosts()
-        fetchFollowingPosts()
+    
+    private var startKey:String?
+    
+    private func fetchFeedPosts(completion: @escaping (_ posts:[Post])->()) {
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        let postsRef = Database.database().reference().child("FeedPosts").child(uid)
+        
+        
+        var queryRef:DatabaseQuery
+        if startKey == nil {
+            queryRef = postsRef.queryOrderedByKey().queryLimited(toFirst: 2)
+        } else {
+            queryRef = postsRef.queryOrderedByKey().queryStarting(atValue: startKey).queryLimited(toFirst: 2)
+        }
+        
+        //self.collectionView?.refreshControl?.endRefreshing()
+
+        queryRef.observeSingleEvent(of: .value) { snapshot in
+            var newPosts = [Post]()
+            guard let dictionaries = snapshot.value as? [String: Any] else { return }
+            dictionaries.forEach({ (key, value) in
+                if self.startKey != key {
+                    guard let dictionary = value as? [String: Any] else { return }
+                    guard let userDic = dictionary["user"] as? [String: Any] else { return }
+                    let user = User(uid: userDic["userId"] as! String, dictionary: userDic)
+                    var post = Post(user: user, dictionary: dictionary)
+                    post.id = key
+                    newPosts.append(post)
+                }
+            })
+            let lastSnapshot = snapshot.children.allObjects.last as! DataSnapshot
+            self.startKey = lastSnapshot.key
+            completion(newPosts)
+        }
     }
     
     @objc func handleUpdateFeed() {
         refresh()
     }
 
-    fileprivate func fetchPosts() {
-        guard let uid = Auth.auth().currentUser?.uid else { return }
-        Database.fetchUserWithUID(uid: uid) { (user) in
-            self.fetchPostsWithUser(user: user)
-        }
-    }
-    
-    fileprivate func fetchFollowingPosts() {
-        guard let uid = Auth.auth().currentUser?.uid else { return }
-         Database.database().reference().child("following").child(uid).observeSingleEvent(of: .value, with: { (snapshot) in
-             guard let userIdsDictionary = snapshot.value as? [String: Any] else { return }
-             userIdsDictionary.forEach({ (key, value) in
-                Database.fetchUserWithUID(uid: key, completion: { (user) in
-                    self.fetchPostsWithUser(user: user)
-                })
-            })
-
-         }) { (err) in
-            print("Failed to fetch followung user ids:", err)
-        }
-    }
-    
     @objc func refresh() {
         print("refresh...")
-        posts.removeAll()
-        fetchAllPosts()
+        //posts.removeAll()
+        self.collectionView?.refreshControl?.endRefreshing()
     }
     
-    fileprivate func fetchPostsWithUser(user: User) {
-        let ref = Database.database().reference().child("posts").child(user.uid)
-        ref.observeSingleEvent(of: .value, with: { (snapshot) in
-            self.collectionView?.refreshControl?.endRefreshing()
-            guard let dictionaries = snapshot.value as? [String: Any] else { return }
-            dictionaries.forEach({ (key, value) in
-                guard let dictionary = value as? [String: Any] else { return }
-                
-                var post = Post(user: user, dictionary: dictionary)
-                post.id = key
-                guard let uid = Auth.auth().currentUser?.uid else { return }
-                Database.database().reference().child("likes").child(key).child(uid).observe(.value, with: { (snapshot) in
-                    if let value = snapshot.value as? Int, value == 1 {
-                        post.hasLiked = true
-                    } else {
-                        post.hasLiked = false
-                    }
-                    self.posts.append(post)
-                }, withCancel: { (err) in
-                    print("Failed to fetch like info for post:", err)
-                })
-            })
-            self.posts.sort(by: { (p1, p2) -> Bool in
-                return p1.creationDate.compare(p2.creationDate) == .orderedDescending
-            })
-            DispatchQueue.main.async {
-                self.collectionView?.reloadData()
-            }
-            
-        }) { (err) in
-            print("Failed to fetch posts:", err)
-        }
-    }
     
     func setupNavigationItems() {
         let image = #imageLiteral(resourceName: "logo")
@@ -123,8 +103,36 @@ class HomeController: UICollectionViewController, HomePostCellDelegate {
         imageView.tintColor = .label
         navigationItem.titleView = imageView
     }
+    
+    
+    // MARK:- ScrollViewDelegate
+    
+    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let offsetY = scrollView.contentOffset.y
+        let contentHeight = scrollView.contentSize.height
+        
+        //print("\(offsetY): \(contentHeight)")
+        if offsetY > contentHeight - scrollView.frame.size.height * leadingScreenForBatching {
+            if !fetchingMore && !endReached {
+                beginBatchFetch()
+            }
+        }
+    }
+    
+    private func beginBatchFetch() {
+        fetchingMore = true
+        fetchFeedPosts() { newPosts in
+            self.posts.append(contentsOf: newPosts)
+            self.endReached = newPosts.count == 0
+            print(self.posts.count)
+            self.fetchingMore = false
+            self.collectionView.reloadData()
+        }
+    }
 
 }
+
+// MARK:- UICollectionViewDelegateFlowLayout
 
 extension HomeController: UICollectionViewDelegateFlowLayout {
     
@@ -204,6 +212,8 @@ extension HomeController: UICollectionViewDelegateFlowLayout {
 }
 
 
+// MARK:- UICollectionViewDataSourcePrefetching
+
 extension HomeController: UICollectionViewDataSourcePrefetching {
     func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
         if !self.refreshControl.isRefreshing {
@@ -230,3 +240,4 @@ extension HomeController: UICollectionViewDataSourcePrefetching {
         }
     }
 }
+

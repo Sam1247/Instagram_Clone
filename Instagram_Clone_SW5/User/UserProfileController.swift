@@ -141,12 +141,13 @@ extension UserProfileController: UICollectionViewDelegateFlowLayout {
 extension UserProfileController: UserProfileHeaderDelegate {
     
     func didTapFollowUnFollowButton() {
-        print("pressed!")
+        //print("pressed!")
         guard let currentLoggedInUserId = Auth.auth().currentUser?.uid else { return }
         guard let userId = user?.uid else { return }
         guard userId != currentLoggedInUserId else { return }
         
         if self.userProfileHeader?.editProfileFollowButton.titleLabel?.text == "Unfollow" {
+            // unfollow
             Database.database().reference().child("following").child(currentLoggedInUserId).child(userId).removeValue { (err, ref) in
                 if let err = err {
                     print("Failed to unfollow user:", err)
@@ -155,10 +156,16 @@ extension UserProfileController: UserProfileHeaderDelegate {
                 self.user!.followersCount -= 1
                 // update users data
                 Database.database().reference().child("users").child(userId).updateChildValues(["followersCount": self.user!.followersCount])
+                
+                //
+                Database.fetchUserWithUID(uid: currentLoggedInUserId) { user in
+                    Database.database().reference().child("users").child(currentLoggedInUserId).updateChildValues(["followingCount": user.followingCount-1])
+                }
             }
             // update followers list
         Database.database().reference().child("followers").child(userId).child(currentLoggedInUserId).removeValue()
         } else {
+            // follow
             // update following list
             let followingRef = Database.database().reference().child("following").child(currentLoggedInUserId)
             let values = [userId: 1]
@@ -170,6 +177,10 @@ extension UserProfileController: UserProfileHeaderDelegate {
                 self.user!.followersCount += 1
                 // update users data
                 Database.database().reference().child("users").child(userId).updateChildValues(["followersCount": self.user!.followersCount])
+                //
+                Database.fetchUserWithUID(uid: currentLoggedInUserId) { user in
+                    Database.database().reference().child("users").child(currentLoggedInUserId).updateChildValues(["followingCount": user.followingCount+1])
+                }
             }
             // update followers list
             let followersRef = Database.database().reference().child("followers").child(userId)

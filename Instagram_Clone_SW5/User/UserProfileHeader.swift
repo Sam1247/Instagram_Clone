@@ -156,9 +156,9 @@ class UserProfileHeader: UICollectionViewCell {
     
     let postsLabel: UILabel = {
         let label = UILabel()
-        let attributedText = NSMutableAttributedString(string: "10\n", attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 14)])
-        attributedText.append(NSAttributedString(string: "posts", attributes: [NSAttributedString.Key.foregroundColor: UIColor.lightGray, NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14)]))
-        label.attributedText = attributedText
+//        let attributedText = NSMutableAttributedString(string: "10\n", attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 14)])
+//        attributedText.append(NSAttributedString(string: "posts", attributes: [NSAttributedString.Key.foregroundColor: UIColor.lightGray, NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14)]))
+//        label.attributedText = attributedText
         label.numberOfLines = 0
         label.textAlignment = .center
         return label
@@ -199,11 +199,21 @@ class UserProfileHeader: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         sharedInit()
+        NotificationCenter.default.addObserver(self, selector: #selector(handleNewPost), name: SharePhotoController.updateFeedNotificationName, object: nil)
     }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         sharedInit()
+        NotificationCenter.default.addObserver(self, selector: #selector(handleNewPost), name: SharePhotoController.updateFeedNotificationName, object: nil)
+    }
+    
+    @objc
+    func handleNewPost() {
+        self.user?.postsCount += 1
+        let postsLabelAttributedString = NSMutableAttributedString(string: "\(self.user!.postsCount)\n", attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 14)])
+        postsLabelAttributedString.append(NSAttributedString(string: "posts", attributes: [NSAttributedString.Key.foregroundColor: UIColor.lightGray, NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14)]))
+        self.postsLabel.attributedText = postsLabelAttributedString
     }
     
     private func sharedInit() {

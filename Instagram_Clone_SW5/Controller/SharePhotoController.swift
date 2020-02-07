@@ -34,7 +34,7 @@ class SharePhotoController: UIViewController {
     @objc private func handleShare() {
         guard let caption = textView.text, !caption.isEmpty else { return }
         guard let image = selectedImage else { return }
-        guard let uploadData = image.jpegData(compressionQuality: 0.7) else { return }
+        guard let uploadData = image.jpegData(compressionQuality: 0.2) else { return }
         navigationItem.rightBarButtonItem?.isEnabled = false
         let filename = NSUUID().uuidString
         let storageRef = Storage.storage().reference().child("posts").child(filename)
@@ -62,7 +62,8 @@ class SharePhotoController: UIViewController {
         guard let uid = Auth.auth().currentUser?.uid else { return }
         let userPostRef = Database.database().reference().child("posts").child(uid)
         let ref = userPostRef.childByAutoId()
-        let values = ["imageUrl": imageUrl, "caption": caption, "imageWidth": postImage.size.width, "imageHeight": postImage.size.height, "creationDate": Date().timeIntervalSince1970] as [String : Any]
+        
+        var values = ["imageUrl": imageUrl, "caption": caption, "imageWidth": postImage.size.width, "imageHeight": postImage.size.height, "creationDate": Date().timeIntervalSince1970] as [String : Any]
         ref.updateChildValues(values) { (err, ref) in
             if let err = err {
                 self.navigationItem.rightBarButtonItem?.isEnabled = true
@@ -73,6 +74,36 @@ class SharePhotoController: UIViewController {
             self.dismiss(animated: true, completion: nil)
             NotificationCenter.default.post(name: SharePhotoController.updateFeedNotificationName, object: nil)
         }
+        // update user profile info
+        let userRef = Database.database().reference().child("users").child(uid)
+        Database.fetchUserWithUID(uid: uid) { user in
+            userRef.updateChildValues(["postsCount": user.postsCount+1])
+        }
+        // update feed posts
+        let feedPostRefperUser = Database.database().reference().child("FeedPosts")
+        let followersRef = Database.database().reference().child("followers").child(uid)
+        followersRef.observeSingleEvent(of: .value) { snapshot in
+             guard let dictionary = snapshot.value as? [String: Int] else { return }
+            dictionary.forEach { (key, value) in
+                
+                //let userDic = [uid: ]
+                //feedPostRefperUser.child(key).childByAutoId().updateChildValues(values)
+                Database.fetchUserWithUID(uid: uid) { user in
+                    let userDic:[String: Any] = ["userId": uid,
+                                                 "bio ": user.bio,
+                                                 "followersCount": user.followersCount,
+                                                 "followingCount": user.followingCount,
+                                                 "postsCount": user.postsCount,
+                                                 "profileImageUrl": user.profileImageUrl,
+                                                 "username": user.username
+                                                ]
+                    values["user"] = userDic
+                    feedPostRefperUser.child(key).childByAutoId().updateChildValues(values)
+                }
+            }
+            
+        }
+        
     }
 
     let imageView: UIImageView = {
