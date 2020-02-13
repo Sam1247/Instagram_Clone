@@ -195,6 +195,7 @@ extension HomeController: UICollectionViewDelegateFlowLayout {
     
     func didLike(for cell: HomePostCell) {
         
+        
         guard let indexPath = collectionView?.indexPath(for: cell) else { return }
 
         var post = posts[indexPath.item]
@@ -202,7 +203,7 @@ extension HomeController: UICollectionViewDelegateFlowLayout {
         guard let postId = post.id else { return }
         guard let uid = Auth.auth().currentUser?.uid else { return }
 
-
+        // update like db
         let values = [uid: post.hasLiked ? 0 : 1]
         
         Database.database().reference().child("likes").child(postId).updateChildValues(values) { (err, _) in
@@ -222,6 +223,8 @@ extension HomeController: UICollectionViewDelegateFlowLayout {
             }
             
         }
+        // update post
+        Database.database().reference().child("FeedPosts").child(uid).child(postId).updateChildValues(["hasLiked": post.hasLiked ? false: true])
     }
 
 }
