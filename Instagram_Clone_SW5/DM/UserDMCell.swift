@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import Firebase
 
 protocol UserDMCellDelegate: AnyObject {
     func userDidFetch(for user: User, with cell: UserDMCell)
@@ -26,31 +25,6 @@ class UserDMCell: UITableViewCell {
         }
     }
     
-    private func setupPreviewMessage() {
-        guard let uid1 = Auth.auth().currentUser?.uid else { return }
-        guard let uid2 = user?.uid else { return }
-        let ref = Database.database().reference().child("Direct/messagesPreview/\(uid1)/\(uid2)")
-        ref.observe(.value) { snapshot in
-            if let dic = snapshot.value as? [String:Any] {
-                DispatchQueue.main.async {
-                    let fromId = dic["fromId"] as! String
-                    if uid1 == fromId {
-                        self.lastMessageLabel.text = "You " + (dic["text"] as! String)
-                    } else {
-                        self.lastMessageLabel.text = (dic["text"] as! String)
-                    }
-                    if let timestamp = dic["timeStamp"] as? Double {
-                        let timestampDate = NSDate(timeIntervalSince1970: TimeInterval(timestamp))
-                        let dateFormatter = DateFormatter()
-                        dateFormatter.dateFormat = "hh:mm:ss a"
-                        self.timeLabel.text = dateFormatter.string(from: timestampDate as Date)
-                    }
-                }
-            } else {
-                self.lastMessageLabel.text = "Say hi to your new Instgram friend!"
-            }
-        }
-    }
     
     let profileImageView: CustomImageView = {
         let iv = CustomImageView()

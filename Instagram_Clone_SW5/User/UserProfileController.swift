@@ -150,6 +150,28 @@ extension UserProfileController: UICollectionViewDelegateFlowLayout {
 
 extension UserProfileController: UserProfileHeaderDelegate {
     
+    func setupHeaderEditFollowButton(for header: UserProfileHeader) {
+        guard let currentLoggedInUserId = Auth.auth().currentUser?.uid else { return }
+        guard let userId = user?.uid else { return }
+        
+        if currentLoggedInUserId == userId {
+            //edit
+            header.editProfileFollowButton.setTitle("Edit Profile", for: .normal)
+        } else {
+            // check if following
+            Database.database().reference().child("following").child(currentLoggedInUserId).child(userId).observeSingleEvent(of: .value, with: { (snapshot) in
+                if let isFollowing = snapshot.value as? Int, isFollowing == 1 {
+                    header.editProfileFollowButton.setTitle("Unfollow", for: .normal)
+                } else {
+                    header.setupFollowStyle()
+                }
+            }) { (err) in
+                print("Failed to check if following:", err)
+            }
+        }
+    }
+    
+    
     func didTapFollowUnFollowButton() {
         //print("pressed!")
         guard let currentLoggedInUserId = Auth.auth().currentUser?.uid else { return }

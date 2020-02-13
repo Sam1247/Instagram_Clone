@@ -1,13 +1,14 @@
 import UIKit
-import Firebase
 
 protocol UserProfileHeaderDelegate: AnyObject {
     func didChangeToListView()
     func didChangeToGridView()
     func didTapFollowUnFollowButton()
+    func setupHeaderEditFollowButton(for header: UserProfileHeader)
 }
 
 class UserProfileHeader: UICollectionViewCell {
+    
    
     var user: User? {
         didSet {
@@ -15,7 +16,8 @@ class UserProfileHeader: UICollectionViewCell {
             profileImageView.loadImage(urlString: profileImageUrl)
             usernameLabel.text = user?.username
             userBio.text = user?.bio
-            setupEditFollowButton()
+            delegate?.setupHeaderEditFollowButton(for: self)
+            //setupEditFollowButton()
             setupFollowingAndFollowersButton()
         }
     }
@@ -47,27 +49,6 @@ class UserProfileHeader: UICollectionViewCell {
         
     }
     
-    fileprivate func setupEditFollowButton() {
-        guard let currentLoggedInUserId = Auth.auth().currentUser?.uid else { return }
-        guard let userId = user?.uid else { return }
-        
-        if currentLoggedInUserId == userId {
-            //edit
-            editProfileFollowButton.setTitle("Edit Profile", for: .normal)
-        } else {
-            // check if following
-            Database.database().reference().child("following").child(currentLoggedInUserId).child(userId).observeSingleEvent(of: .value, with: { (snapshot) in
-                if let isFollowing = snapshot.value as? Int, isFollowing == 1 {
-                    self.editProfileFollowButton.setTitle("Unfollow", for: .normal)
-                } else {
-                    self.setupFollowStyle()
-                }
-            }) { (err) in
-                print("Failed to check if following:", err)
-            }
-        }
-    }
-    
     @objc func handleEditProfileOrFollow() {
         delegate?.didTapFollowUnFollowButton()
         
@@ -95,7 +76,7 @@ class UserProfileHeader: UICollectionViewCell {
         }
     }
     
-    fileprivate func setupFollowStyle() {
+    func setupFollowStyle() {
         editProfileFollowButton.setTitle(("Follow"), for: .normal)
         editProfileFollowButton.backgroundColor = UIColor.systemBlue
         editProfileFollowButton.setTitleColor(.white, for: .normal)
