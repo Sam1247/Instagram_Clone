@@ -79,7 +79,7 @@ class UserProfileHeader: UICollectionViewCell {
             self.followersLabel.attributedText = attributedText
             print("Sucessfully unfollowed user:", self.user!.username)
             self.setupFollowStyle()
-        } else {
+        } else if editProfileFollowButton.titleLabel?.text == "Follow" {
             self.user!.followersCount += 1
                      //
             let attributedText = NSMutableAttributedString(string: "\(self.user!.followersCount)\n", attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 14)])

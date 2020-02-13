@@ -35,12 +35,22 @@ class UserProfileController: UICollectionViewController {
     
     fileprivate func fetchUser() {
         let uid = userId ?? (Auth.auth().currentUser?.uid ?? "")
-        Database.fetchUserWithUID(uid: uid) { (user) in
+        
+        Database.database().reference().child("users").child(uid).observe( .value) { snapshot in
+            guard let userDictionary = snapshot.value as? [String: Any] else { return }
+            let user = User(uid: uid, dictionary: userDictionary)
             self.user = user
             self.navigationItem.title = self.user?.username
             self.collectionView?.reloadData()
             self.fetchOrderedPosts()
         }
+        
+//        Database.fetchUserWithUID(uid: uid) { (user) in
+//            self.user = user
+//            self.navigationItem.title = self.user?.username
+//            self.collectionView?.reloadData()
+//            self.fetchOrderedPosts()
+//        }
     }
     
     fileprivate func fetchOrderedPosts() {
