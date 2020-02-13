@@ -24,7 +24,10 @@ class SharePhotoController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Share", style: .done, target: self, action: #selector(handleShare))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Share",
+                                                            style: .done,
+                                                            target: self,
+                                                            action: #selector(handleShare))
         setupViews()
     }
     

@@ -11,14 +11,23 @@ import Firebase
 
 extension Auth {
 
-    func createUser(with email: String, username: String, password: String, bio: String, image: UIImage?, completion: @escaping (Error?) -> ()) {
+    func createUser(with email: String,
+                    username: String,
+                    password: String,
+                    bio: String, image: UIImage?,
+                    completion: @escaping (Error?) -> ()) {
         Auth.auth().createUser(withEmail: email, password: password, completion: { (user, err: Error?) in
             if let err = err { completion(err); return }
 
             Storage.storage().uploadUserProfileImage(image: image, completion: { (profileImageUrl, err) in
                 if let err = err { completion(err); return }
                 guard let uid = user?.user.uid else { return }
-                Database.database().uploadUser(withUID: uid, username: username, profileImageUrl: profileImageUrl,bio: bio, completion: { (err) in
+                Database.database().uploadUser(withUID: uid,
+                                               username: username,
+                                               profileImageUrl: profileImageUrl,
+                                               bio: bio,
+                                               completion:
+                    { (err) in
                     if let err = err { completion(err); return }
                         completion(nil)
                 })
@@ -67,7 +76,11 @@ extension Database {
         }
     }
     
-    fileprivate func uploadUser(withUID uid: String, username: String, profileImageUrl: String? = nil, bio: String, completion: @escaping (Error?) -> () ) {
+    fileprivate func uploadUser(withUID uid: String,
+                                username: String,
+                                profileImageUrl: String? = nil,
+                                bio: String,
+                                completion: @escaping (Error?) -> () ) {
         var dictionaryValues:[String:Any] = ["username": username, "bio": bio]
         if profileImageUrl != nil {
             dictionaryValues["profileImageUrl"] = profileImageUrl
@@ -77,7 +90,8 @@ extension Database {
         dictionaryValues["postsCount"] = 0
         
         let values = [uid: dictionaryValues]
-        Database.database().reference().child("users").updateChildValues(values, withCompletionBlock: { (err, ref) in
+        Database.database().reference().child("users").updateChildValues(values,
+                                                                         withCompletionBlock: { (err, ref) in
             if let err = err { completion(err); return }
             completion(nil)
         })

@@ -77,7 +77,8 @@ class MosiacLayout: UICollectionViewLayout {
     
     private func prepareHeader(for collectionView: UICollectionView) {
         let headerIndexPath = IndexPath(item: 0, section: 0)
-        let headerAttributes = UICollectionViewLayoutAttributes(forSupplementaryViewOfKind: Element.header.kind, with: headerIndexPath)
+        let headerAttributes = UICollectionViewLayoutAttributes(forSupplementaryViewOfKind: Element.header.kind,
+                                                                with: headerIndexPath)
         let headerHeight = delegate?.collectionView(collectionView, heightForHeader: headerIndexPath) ?? 200
         headerAttributes.frame = CGRect(x: 0, y: contentHeight, width: contentWidth , height: headerHeight)
         contentHeight += headerAttributes.frame.height
@@ -211,7 +212,8 @@ class MosiacLayout: UICollectionViewLayout {
 
 extension MosiacLayout {
     
-    override func layoutAttributesForSupplementaryView(ofKind elementKind: String, at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
+    override func layoutAttributesForSupplementaryView(ofKind elementKind: String,
+                                                       at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
         switch elementKind {
         case Element.header.kind:
             return cache[.header]?[indexPath]

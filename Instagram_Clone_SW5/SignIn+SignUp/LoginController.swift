@@ -10,16 +10,7 @@ import UIKit
 import Firebase
 
 class LoginController: UIViewController {
-    
-//    override func viewWillAppear(_ animated: Bool) {
-//        super.viewWillAppear(animated)
-//        UIApplication.shared.statusBarStyle = .lightContent
-//    }
-//
-//    override func viewWillDisappear(_ animated: Bool) {
-//        super.viewWillDisappear(animated)
-//        UIApplication.shared.statusBarStyle = .default
-//    }
+
     
     override var preferredStatusBarStyle: UIStatusBarStyle { return .lightContent }
 
@@ -88,9 +79,13 @@ class LoginController: UIViewController {
     
     let dontHaveAccountButton: UIButton = {
         let button = UIButton(type: .system)
-        let attributedTitle = NSMutableAttributedString(string: "Don't have an account?  ", attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14), NSAttributedString.Key.foregroundColor: UIColor.lightGray])
+        let attributedTitle = NSMutableAttributedString(string: "Don't have an account?  ",
+                                                        attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14),
+                                                                     NSAttributedString.Key.foregroundColor: UIColor.lightGray])
         button.setAttributedTitle(attributedTitle, for: .normal)
-        attributedTitle.append(NSAttributedString(string: "Sign Up.", attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 14), NSAttributedString.Key.foregroundColor: UIColor.systemBlue]))
+        attributedTitle.append(NSAttributedString(string: "Sign Up.",
+                                                  attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 14),
+                                                               NSAttributedString.Key.foregroundColor: UIColor.systemBlue]))
         button.addTarget(self, action: #selector(handleShowSignUp), for: .touchUpInside)
         return button
     }()

@@ -20,7 +20,8 @@ class SignUpController: UIViewController, UIImagePickerControllerDelegate, UINav
     
     let photoButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setImage(UIImage(named: "plus_photo")!.withTintColor(.label, renderingMode: .alwaysTemplate), for: .normal)
+        button.setImage(UIImage(named: "plus_photo")!.withTintColor(.label,
+                                                                    renderingMode: .alwaysTemplate), for: .normal)
         button.addTarget(self, action: #selector(handlePlusPhoto), for: .touchUpInside)
         //button.backgroundColor = .red
         return button
@@ -86,9 +87,13 @@ class SignUpController: UIViewController, UIImagePickerControllerDelegate, UINav
     
     let alreadyHaveAccountButton: UIButton = {
         let button = UIButton(type: .system)
-        let attributedTitle = NSMutableAttributedString(string: "Already have an account?  ", attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14), NSAttributedString.Key.foregroundColor: UIColor.lightGray])
+        let attributedTitle = NSMutableAttributedString(string: "Already have an account?  ",
+                                                        attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14),
+                                                                     NSAttributedString.Key.foregroundColor: UIColor.lightGray])
         button.setAttributedTitle(attributedTitle, for: .normal)
-        attributedTitle.append(NSAttributedString(string: "Sign In.", attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 14), NSAttributedString.Key.foregroundColor: UIColor.systemBlue]))
+        attributedTitle.append(NSAttributedString(string: "Sign In.",
+                                                  attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 14),
+                                                               NSAttributedString.Key.foregroundColor: UIColor.systemBlue]))
 
         button.addTarget(self, action: #selector(handleAlreadyHaveAccount), for: .touchUpInside)
         return button
@@ -133,7 +138,8 @@ class SignUpController: UIViewController, UIImagePickerControllerDelegate, UINav
         present(imagePickerController, animated: true, completion: nil)
     }
     
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+    func imagePickerController(_ picker: UIImagePickerController,
+                               didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         if let editedImage = info[.editedImage] as? UIImage {
             photoButton.setImage(editedImage.withRenderingMode(.alwaysOriginal), for: .normal)
         } else if let originalImage = info[.originalImage] as? UIImage {
@@ -154,7 +160,12 @@ class SignUpController: UIViewController, UIImagePickerControllerDelegate, UINav
         guard let password = passwordTextField.text, !password.isEmpty else { return }
         guard let bio = bioTextField.text, !bio.isEmpty else { return }
         
-        Auth.auth().createUser(with: email, username: username, password: password, bio: bio, image: photoButton.imageView?.image) { (err) in
+        Auth.auth().createUser(with: email,
+                               username: username,
+                               password: password,
+                               bio: bio,
+                               image: photoButton.imageView?.image)
+        { (err) in
             if let err = err {
                 print("Failed to sign up user:", err)
                 self.emailTextField.text = ""

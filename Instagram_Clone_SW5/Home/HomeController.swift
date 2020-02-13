@@ -28,9 +28,15 @@ class HomeController: UICollectionViewController, HomePostCellDelegate {
         super.viewDidLoad()
         collectionView?.prefetchDataSource = self
         collectionView?.backgroundColor = .systemBackground
-        collectionView?.register(HomePostCell.self, forCellWithReuseIdentifier: cellId)
-        NotificationCenter.default.addObserver(self, selector: #selector(handleUpdateFeed), name: SharePhotoController.updateFeedNotificationName, object: nil)
-        refreshControl.addTarget(self, action: #selector(refresh), for: .valueChanged)
+        collectionView?.register(HomePostCell.self,
+                                 forCellWithReuseIdentifier: cellId)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(handleUpdateFeed),
+                                               name: SharePhotoController.updateFeedNotificationName,
+                                               object: nil)
+        refreshControl.addTarget(self,
+                                 action: #selector(refresh),
+                                 for: .valueChanged)
         collectionView?.refreshControl = refreshControl
         setupDMbarbuttomItem()
         setupNavigationItems()
@@ -47,7 +53,10 @@ class HomeController: UICollectionViewController, HomePostCellDelegate {
     }
     
     private func setupDMbarbuttomItem () {
-        let button = UIBarButtonItem(image: UIImage(systemName: "paperplane")?.withTintColor(.label, renderingMode: .alwaysOriginal), style: .plain, target: self, action: #selector(showDMController))
+        let button = UIBarButtonItem(image: UIImage(systemName: "paperplane")?.withTintColor(.label, renderingMode: .alwaysOriginal),
+                                     style: .plain,
+                                     target: self,
+                                     action: #selector(showDMController))
         self.navigationItem.rightBarButtonItem = button
     }
     
@@ -90,7 +99,9 @@ class HomeController: UICollectionViewController, HomePostCellDelegate {
                 }
             })
             newPosts.sort { (p1, p2) -> Bool in
-                return Double(p1.creationDate.timeIntervalSince1970) < Double(p2.creationDate.timeIntervalSince1970)
+                let date1 = Double(p1.creationDate.timeIntervalSince1970)
+                let date2 = Double(p2.creationDate.timeIntervalSince1970)
+                return date1 < date2
             }
             let lastSnapshot = snapshot.children.allObjects.last as! DataSnapshot
             self.startKey = lastSnapshot.key
@@ -151,7 +162,9 @@ class HomeController: UICollectionViewController, HomePostCellDelegate {
 extension HomeController: UICollectionViewDelegateFlowLayout {
     
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        sizeForItemAt indexPath: IndexPath) -> CGSize {
         let commentString = posts[indexPath.item].caption
         let estimateHeight = commentString.getEdtimatedHeight(width: view.frame.width)
         var height: CGFloat = 40 + 8 + 8 //username and userProfileImageView
@@ -162,13 +175,16 @@ extension HomeController: UICollectionViewDelegateFlowLayout {
         return CGSize(width: view.frame.width, height: height)
     }
 
-    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    override func collectionView(_ collectionView: UICollectionView,
+                                 numberOfItemsInSection section: Int) -> Int {
         return posts.count
     }
     
 
-    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! HomePostCell
+    override func collectionView(_ collectionView: UICollectionView,
+                                 cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId,
+                                                      for: indexPath) as! HomePostCell
         if !self.refreshControl.isRefreshing {
             cell.post = posts[indexPath.item]
             
@@ -179,7 +195,9 @@ extension HomeController: UICollectionViewDelegateFlowLayout {
         return cell
     }
     
-    override func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+    override func collectionView(_ collectionView: UICollectionView,
+                                 didEndDisplaying cell: UICollectionViewCell,
+                                 forItemAt indexPath: IndexPath) {
         if let dataLoader = loadingPhotosOperations[indexPath] {
             loadingPhotosOperations.removeValue(forKey: indexPath)
             dataLoader.cancel()
@@ -206,7 +224,8 @@ extension HomeController: UICollectionViewDelegateFlowLayout {
         // update like db
         let values = [uid: post.hasLiked ? 0 : 1]
         
-        Database.database().reference().child("likes").child(postId).updateChildValues(values) { (err, _) in
+        Database.database().reference().child("likes").child(postId).updateChildValues(values)
+        { (err, _) in
 
             if let err = err {
                 print("Failed to like post:", err)
@@ -233,7 +252,8 @@ extension HomeController: UICollectionViewDelegateFlowLayout {
 // MARK:- UICollectionViewDataSourcePrefetching
 
 extension HomeController: UICollectionViewDataSourcePrefetching {
-    func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
+    func collectionView(_ collectionView: UICollectionView,
+                        prefetchItemsAt indexPaths: [IndexPath]) {
         if !self.refreshControl.isRefreshing {
             for indexPath in indexPaths {
                 let imageUrl = posts[indexPath.row].imageUrl
@@ -248,7 +268,8 @@ extension HomeController: UICollectionViewDataSourcePrefetching {
     }
 
     // it's only called when the cache is cleared as the photos
-    func collectionView(_ collectionView: UICollectionView, cancelPrefetchingForItemsAt indexPaths: [IndexPath]) {
+    func collectionView(_ collectionView: UICollectionView,
+                        cancelPrefetchingForItemsAt indexPaths: [IndexPath]) {
         for indexPath in indexPaths {
             if let dataPrefetcher = loadingPhotosOperations[indexPath] {
                 dataPrefetcher.cancel()

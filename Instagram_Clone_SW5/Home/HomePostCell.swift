@@ -29,7 +29,8 @@ class HomePostCell: UICollectionViewCell {
 
     lazy var likeButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setImage(UIImage(systemName: "heart")!.withTintColor(.label, renderingMode: .alwaysOriginal), for: .normal)
+        button.setImage(UIImage(systemName: "heart")!.withTintColor(.label,
+                                                                    renderingMode: .alwaysOriginal), for: .normal)
         button.addTarget(self, action: #selector(handleLike), for: .touchUpInside)
         return button
     }()
@@ -41,9 +42,11 @@ class HomePostCell: UICollectionViewCell {
     
     private func performLikeAnimation() {
         if likeButton.imageView?.image == UIImage(systemName: "heart") {
-            likeButton.setImage(UIImage(systemName: "heart")!.withTintColor(.label, renderingMode: .alwaysOriginal), for: .normal)
+            likeButton.setImage(UIImage(systemName: "heart")!.withTintColor(.label,
+                                                                            renderingMode: .alwaysOriginal), for: .normal)
         } else {
-            likeButton.setImage(UIImage(systemName: "heart.fill")!.withTintColor(.systemRed, renderingMode: .alwaysOriginal), for: .normal)
+            likeButton.setImage(UIImage(systemName: "heart.fill")!.withTintColor(.systemRed,
+                                                                                 renderingMode: .alwaysOriginal), for: .normal)
         }
         //likeButton.setImage(post?.hasLiked == true ? UIImage(systemName: "heart.fill")!.withTintColor(.systemRed, renderingMode: .alwaysOriginal) : UIImage(systemName: "heart")!.withTintColor(.label, renderingMode: .alwaysOriginal), for: .normal)
         UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 10, options: [], animations: {
@@ -108,11 +111,16 @@ class HomePostCell: UICollectionViewCell {
     
     fileprivate func setupAttributedCaption() {
         guard let post = self.post else { return }
-        let attributedText = NSMutableAttributedString(string: post.user.username, attributes: [NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 14)])
-        attributedText.append(NSAttributedString(string: " \(post.caption)", attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14)]))
+        let attributedText = NSMutableAttributedString(string: post.user.username,
+                                                       attributes: [NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 14)])
+        attributedText.append(NSAttributedString(string: " \(post.caption)",
+            attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14)]))
 
-        attributedText.append(NSAttributedString(string: "\n\n", attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 4)]))
-        attributedText.append(NSAttributedString(string: post.creationDate.displayTimeAgo(), attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14), NSAttributedString.Key.foregroundColor: UIColor.gray]))
+        attributedText.append(NSAttributedString(string: "\n\n",
+                                                 attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 4)]))
+        attributedText.append(NSAttributedString(string: post.creationDate.displayTimeAgo(),
+                                                 attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14),
+                                                              NSAttributedString.Key.foregroundColor: UIColor.gray]))
 
         captionLabel.attributedText = attributedText
     }

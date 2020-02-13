@@ -16,7 +16,16 @@ extension UIColor {
 
 
 extension UIView {
-    func anchor(top: NSLayoutYAxisAnchor?, left: NSLayoutXAxisAnchor?, bottom: NSLayoutYAxisAnchor?, right: NSLayoutXAxisAnchor?, paddingTop: CGFloat, paddingLeft: CGFloat, paddingBottom: CGFloat, paddingRight: CGFloat, width: CGFloat, height: CGFloat) {
+    func anchor(top: NSLayoutYAxisAnchor?,
+                left: NSLayoutXAxisAnchor?,
+                bottom: NSLayoutYAxisAnchor?,
+                right: NSLayoutXAxisAnchor?,
+                paddingTop: CGFloat,
+                paddingLeft: CGFloat,
+                paddingBottom: CGFloat,
+                paddingRight: CGFloat,
+                width: CGFloat,
+                height: CGFloat) {
         translatesAutoresizingMaskIntoConstraints = false
         if let top = top {
             topAnchor.constraint(equalTo: top, constant: paddingTop).isActive = true

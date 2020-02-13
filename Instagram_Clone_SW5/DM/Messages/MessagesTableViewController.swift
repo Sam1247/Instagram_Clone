@@ -154,7 +154,7 @@ class MessagesTableViewController: UITableViewController, CommentInputAccessoryV
         let frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 50)
         let commentInputAccessoryView = CommentInputAccessoryView(frame: frame)
         let containerView = UIView()
-        containerView.backgroundColor = .white
+        commentInputAccessoryView.backgroundColor = .systemBackground
         containerView.frame = CGRect(x: 0, y: 0, width: 100, height: 50)
         commentInputAccessoryView.delegate = self
         return commentInputAccessoryView
