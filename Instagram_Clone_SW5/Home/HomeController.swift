@@ -11,7 +11,7 @@ import Firebase
 
 class HomeController: UICollectionViewController, HomePostCellDelegate {
     
-    
+    var user:User?
     let cellId = "cellId"
     var posts = [Post]()
     let refreshControl = UIRefreshControl()
@@ -34,7 +34,16 @@ class HomeController: UICollectionViewController, HomePostCellDelegate {
         collectionView?.refreshControl = refreshControl
         setupDMbarbuttomItem()
         setupNavigationItems()
+        fetchUser()
         beginBatchFetch()
+    }
+    
+    private func fetchUser() {
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        Database.fetchUserWithUID(uid: uid) { (user) in
+            self.user = user
+            //self.navigationItem.title = self.user?.username
+        }
     }
     
     private func setupDMbarbuttomItem () {
@@ -44,7 +53,10 @@ class HomeController: UICollectionViewController, HomePostCellDelegate {
     
     @objc
     private func showDMController() {
+        guard let user = self.user else { return }
         let DMTVC = DMtableViewController()
+        DMTVC.user = user
+        DMTVC.navigationItem.title = "Direct"
         DMTVC.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(DMTVC, animated: true)
     }
@@ -59,13 +71,11 @@ class HomeController: UICollectionViewController, HomePostCellDelegate {
         
         var queryRef:DatabaseQuery
         if startKey == nil {
-            queryRef = postsRef.queryOrderedByKey().queryLimited(toFirst: 2)
+            queryRef = postsRef.queryOrderedByKey().queryLimited(toFirst: 3)
         } else {
-            queryRef = postsRef.queryOrderedByKey().queryStarting(atValue: startKey).queryLimited(toFirst: 2)
+            queryRef = postsRef.queryOrderedByKey().queryStarting(atValue: startKey).queryLimited(toFirst: 3)
         }
         
-        //self.collectionView?.refreshControl?.endRefreshing()
-
         queryRef.observeSingleEvent(of: .value) { snapshot in
             var newPosts = [Post]()
             guard let dictionaries = snapshot.value as? [String: Any] else { return }
@@ -79,6 +89,9 @@ class HomeController: UICollectionViewController, HomePostCellDelegate {
                     newPosts.append(post)
                 }
             })
+            newPosts.sort { (p1, p2) -> Bool in
+                return Double(p1.creationDate.timeIntervalSince1970) < Double(p2.creationDate.timeIntervalSince1970)
+            }
             let lastSnapshot = snapshot.children.allObjects.last as! DataSnapshot
             self.startKey = lastSnapshot.key
             completion(newPosts)
@@ -117,6 +130,7 @@ class HomeController: UICollectionViewController, HomePostCellDelegate {
                 beginBatchFetch()
             }
         }
+        print(posts.count)
     }
     
     private func beginBatchFetch() {
@@ -136,6 +150,7 @@ class HomeController: UICollectionViewController, HomePostCellDelegate {
 
 extension HomeController: UICollectionViewDelegateFlowLayout {
     
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let commentString = posts[indexPath.item].caption
         let estimateHeight = commentString.getEdtimatedHeight(width: view.frame.width)
@@ -150,6 +165,7 @@ extension HomeController: UICollectionViewDelegateFlowLayout {
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return posts.count
     }
+    
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! HomePostCell
@@ -200,7 +216,6 @@ extension HomeController: UICollectionViewDelegateFlowLayout {
 
             post.hasLiked = !post.hasLiked
             
-            // structs man! xD
             DispatchQueue.main.async {
                 self.posts[indexPath.item] = post
                 self.collectionView?.reloadItems(at: [indexPath])
@@ -228,7 +243,7 @@ extension HomeController: UICollectionViewDataSourcePrefetching {
             }
         }
     }
-    
+
     // it's only called when the cache is cleared as the photos
     func collectionView(_ collectionView: UICollectionView, cancelPrefetchingForItemsAt indexPaths: [IndexPath]) {
         for indexPath in indexPaths {

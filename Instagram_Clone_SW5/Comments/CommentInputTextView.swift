@@ -12,7 +12,7 @@ class CommentInputTextView: UITextView {
 
     fileprivate let placeholderLabel: UILabel = {
         let label = UILabel()
-        label.text = "Enter Comment"
+        //label.text = "Enter Comment"
         label.textColor = UIColor.lightGray
         return label
     }()

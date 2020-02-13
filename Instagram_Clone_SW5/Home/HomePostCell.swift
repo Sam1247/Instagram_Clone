@@ -36,6 +36,23 @@ class HomePostCell: UICollectionViewCell {
     
     @objc func handleLike() {
         delegate?.didLike(for: self)
+        performLikeAnimation()
+    }
+    
+    private func performLikeAnimation() {
+        if likeButton.imageView?.image == UIImage(systemName: "heart") {
+            likeButton.setImage(UIImage(systemName: "heart")!.withTintColor(.label, renderingMode: .alwaysOriginal), for: .normal)
+        } else {
+            likeButton.setImage(UIImage(systemName: "heart.fill")!.withTintColor(.systemRed, renderingMode: .alwaysOriginal), for: .normal)
+        }
+        //likeButton.setImage(post?.hasLiked == true ? UIImage(systemName: "heart.fill")!.withTintColor(.systemRed, renderingMode: .alwaysOriginal) : UIImage(systemName: "heart")!.withTintColor(.label, renderingMode: .alwaysOriginal), for: .normal)
+        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 10, options: [], animations: {
+            self.animatedLikeImageView.transform = .identity
+            self.animatedLikeImageView.alpha = 1
+        }) { (bool) in
+            self.animatedLikeImageView.transform = .init(scaleX: 0.1, y: 0.1)
+            self.animatedLikeImageView.alpha = 0
+        }
     }
 
     lazy var commentButton: UIButton = {
@@ -66,6 +83,13 @@ class HomePostCell: UICollectionViewCell {
         let label = UILabel()
         label.numberOfLines = 0
         return label
+    }()
+    
+    let animatedLikeImageView: UIImageView = {
+        let iv = UIImageView()
+        iv.image = UIImage(systemName: "heart.fill")?.withTintColor(.systemRed, renderingMode: .alwaysOriginal)
+        //iv.backgroundColor = .systemRed
+        return iv
     }()
     
     var post: Post? {
@@ -124,6 +148,7 @@ class HomePostCell: UICollectionViewCell {
         addSubview(usernameLabel)
         addSubview(optionsButton)
         addSubview(userProfileImageView)
+        addSubview(animatedLikeImageView)
 
         userProfileImageView.anchor(top: topAnchor, left: leftAnchor, bottom: nil, right: nil, paddingTop: 8, paddingLeft: 8, paddingBottom: 0, paddingRight: 0, width: 40, height: 40)
         userProfileImageView.layer.cornerRadius = 40 / 2
@@ -139,6 +164,12 @@ class HomePostCell: UICollectionViewCell {
 
         addSubview(captionLabel)
         captionLabel.anchor(top: likeButton.bottomAnchor, left: leftAnchor, bottom: bottomAnchor, right: rightAnchor, paddingTop: 0, paddingLeft: 8, paddingBottom: 0, paddingRight: 8, width: 0, height: 0)
+        
+        animatedLikeImageView.anchor(top: nil, left: nil, bottom: nil, right: nil, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 150, height: 125)
+        animatedLikeImageView.centerXAnchor.constraint(equalTo: photoImageView.centerXAnchor).isActive = true
+        animatedLikeImageView.centerYAnchor.constraint(equalTo: photoImageView.centerYAnchor).isActive = true
+        animatedLikeImageView.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)
+        animatedLikeImageView.alpha = 0
     }
     
     fileprivate func setupActionButtons() {

@@ -20,12 +20,13 @@ class CustomImageView: UIImageView {
     var lastURLUsedToLoadImage: String?
     
     func loadImage(urlString: String) {
+        self.image = nil
         //print("Loading image...")
         lastURLUsedToLoadImage = urlString
-        self.image = nil
+        
         if let cachedImage = imageCache[urlString] {
-            i += 1
-            print("Cache Hit: \(i)")
+            //i += 1
+           // print("Cache Hit: \(i)")
             self.image = cachedImage
             return
         }
