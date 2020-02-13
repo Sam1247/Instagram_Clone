@@ -4,7 +4,8 @@ A clone of instagram iOS app created using Swift 5 and Firebase
 
 # Login
 
-<img src="images/login.png" width="350">
+| <img src="images/login.png" width="350"> | <img src="images/signup.png" width="350"> | 
+|:---:|:---:|
 
 # Home Feed
 
@@ -17,35 +18,29 @@ A clone of instagram iOS app created using Swift 5 and Firebase
 
 # Profile Grid and List View
 
-| <img src="images/profileGrid.png" width="350"> | <img src="images/profile.png" width="350"> | 
+| <img src="images/profile2.png" width="350"> | <img src="images/profile 3.png" width="350"> | 
 |:---:|:---:|
 
 # Custom Mosiac Image Picker
 
-| <img src="images/imagePicker1.png" width="350"> | <img src="images/imagePicker2.png" width="350"> | 
+| <img src="images/imagePicker1.png" width="350"> |<a href="https://imgflip.com/gif/3p4j0p"><img src="https://i.imgflip.com/3p4j0p.gif" title="made at imgflip.com"/></a> | 
 |:---:|:---:|
 
 
 # Users Search and Adding Comments
 
-| <img src="images/search.png" width="350"> | <img src="images/comments.png" width="350"> | 
+| <a href="https://imgflip.com/gif/3p4mxb"><img src="https://i.imgflip.com/3p4mxb.gif" title="made at imgflip.com"/></a> | <img src="images/comments.png" width="350"> | 
 |:---:|:---:|
 
-# Features
-* Dark Mode
-* Building Fancy custom UICollectionViewLayout with stretchy header from scratch
-* prefetching "create operations in background to fetch Home Feed cells that about to display"
-* Dynamic sizing Cells
+# DM and interactive keyboard (like iMessage app)
 
-# TODO
-* Perform delete post
-* Implement Chat 
-* Implement Home Feed Pagination queries
-* Use diffable data source API introduced in iOS 13 in Search Controller
-* Implement Stories
+<img src="images/chat.png" width="350">
 
+<a href="https://imgflip.com/gif/3p4oix"><img src="https://i.imgflip.com/3p4oix.gif" title="made at imgflip.com"/></a>
 
-
-
-
-
+# performance
+* Using pagination in homefeed and messages to reduce server cost
+* implement infinite scrolling ( The app loads some initial data and then adds the rest of the information when the user reaches the bottom of the visible content) in home feed for better user experience
+* prefetching the posts before they got displayed in the backgrourd threads reducing the catch mis by roughly 40%
+<a href="https://imgflip.com/gif/3p4rxu"><img src="https://i.imgflip.com/3p4rxu.gif" title="made at imgflip.com"/></a>
+<a href="https://imgflip.com/gif/3p4sdu"><img src="https://i.imgflip.com/3p4sdu.gif" title="made at imgflip.com"/></a>
