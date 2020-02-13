@@ -22,7 +22,7 @@ class HomeController: UICollectionViewController, HomePostCellDelegate {
     // paginations properties
     var fetchingMore = false
     var endReached = false
-    let leadingScreenForBatching:CGFloat = 3
+    let leadingScreenForBatching:CGFloat = 2
 
     override func viewDidLoad() {
         super.viewDidLoad()

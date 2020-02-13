@@ -34,11 +34,14 @@ class UserProfileHeader: UICollectionViewCell {
         let postsCount = user.postsCount
         //
         let followersLabelAttributedString = NSMutableAttributedString(string: "\(followersCount)\n", attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 14)])
-        followersLabelAttributedString.append(NSAttributedString(string: "followers", attributes: [NSAttributedString.Key.foregroundColor: UIColor.lightGray, NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14)]))
+        followersLabelAttributedString.append(NSAttributedString(string: "followers",
+                                                                 attributes: [NSAttributedString.Key.foregroundColor: UIColor.lightGray,
+                                                                              NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14)]))
         self.followersLabel.attributedText = followersLabelAttributedString
         //
         
-        let postsLabelAttributedString = NSMutableAttributedString(string: "\(postsCount)\n", attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 14)])
+        let postsLabelAttributedString = NSMutableAttributedString(string: "\(postsCount)\n",
+            attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 14)])
         postsLabelAttributedString.append(NSAttributedString(string: "posts", attributes: [NSAttributedString.Key.foregroundColor: UIColor.lightGray, NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14)]))
         self.postsLabel.attributedText = postsLabelAttributedString
         //

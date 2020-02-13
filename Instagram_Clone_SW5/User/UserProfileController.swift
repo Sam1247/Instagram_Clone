@@ -26,9 +26,13 @@ class UserProfileController: UICollectionViewController {
         super.viewDidLoad()
         
         collectionView?.backgroundColor = .systemBackground
-        collectionView?.register(UserProfilePhotoCell.self, forCellWithReuseIdentifier: cellId)
-        collectionView?.register(HomePostCell.self, forCellWithReuseIdentifier: homePostCellId)
-        collectionView?.register(UserProfileHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "headerId")
+        collectionView?.register(UserProfilePhotoCell.self,
+                                 forCellWithReuseIdentifier: cellId)
+        collectionView?.register(HomePostCell.self,
+                                 forCellWithReuseIdentifier: homePostCellId)
+        collectionView?.register(UserProfileHeader.self,
+                                 forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+                                 withReuseIdentifier: "headerId")
         setupLogOutButton()
         fetchUser()
     }
@@ -44,13 +48,6 @@ class UserProfileController: UICollectionViewController {
             self.collectionView?.reloadData()
             self.fetchOrderedPosts()
         }
-        
-//        Database.fetchUserWithUID(uid: uid) { (user) in
-//            self.user = user
-//            self.navigationItem.title = self.user?.username
-//            self.collectionView?.reloadData()
-//            self.fetchOrderedPosts()
-//        }
     }
     
     fileprivate func fetchOrderedPosts() {
@@ -69,7 +66,11 @@ class UserProfileController: UICollectionViewController {
 
         
     fileprivate func setupLogOutButton() {
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "list.dash")?.withTintColor(.label, renderingMode: .alwaysOriginal), style: .plain, target: self, action: #selector(handleLogOut))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "list.dash")?.withTintColor(.label,
+                                                                                                                   renderingMode: .alwaysOriginal),
+                                                            style: .plain,
+                                                            target: self,
+                                                            action: #selector(handleLogOut))
     }
 
     @objc func handleLogOut() {
@@ -91,15 +92,20 @@ class UserProfileController: UICollectionViewController {
     
     weak var userProfileHeader: UserProfileHeader?
     
-    override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "headerId", for: indexPath) as! UserProfileHeader
+    override func collectionView(_ collectionView: UICollectionView,
+                                 viewForSupplementaryElementOfKind kind: String,
+                                 at indexPath: IndexPath) -> UICollectionReusableView {
+        let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind,
+                                                                     withReuseIdentifier: "headerId", for: indexPath) as! UserProfileHeader
         self.userProfileHeader = header
         header.user = self.user
         header.delegate = self
         return header
     }
     
-    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+    public func collectionView(_ collectionView: UICollectionView,
+                               layout collectionViewLayout: UICollectionViewLayout,
+                               referenceSizeForHeaderInSection section: Int) -> CGSize {
         let bioString = user?.bio ?? ""
         let estimatedHeight = bioString.getEdtimatedHeight(width: view.frame.width)
         return CGSize(width: view.frame.width, height: 220 + estimatedHeight + 10)
@@ -109,32 +115,42 @@ class UserProfileController: UICollectionViewController {
 }
 
 extension UserProfileController: UICollectionViewDelegateFlowLayout {
-    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    override func collectionView(_ collectionView: UICollectionView,
+                                 numberOfItemsInSection section: Int) -> Int {
         return posts.count
     }
 
-    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    override func collectionView(_ collectionView: UICollectionView,
+                                 cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         
         if isGridView {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! UserProfilePhotoCell
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId,
+                                                          for: indexPath) as! UserProfilePhotoCell
             cell.post = posts[indexPath.item]
             return cell
         }
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: homePostCellId, for: indexPath) as! HomePostCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: homePostCellId,
+                                                      for: indexPath) as! HomePostCell
         cell.post = posts[indexPath.item]
         return cell
     }
 
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         return 1
     }
 
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 1
     }
 
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        sizeForItemAt indexPath: IndexPath) -> CGSize {
         if isGridView {
             let width = (view.frame.width - 2) / 3
             return CGSize(width: width, height: width)
