@@ -45,7 +45,7 @@ class CommentInputAccessoryView: UIView {
     }
 
     private func sharedInit() {
-        backgroundColor = .systemBackground
+        backgroundColor = .secondarySystemBackground
         autoresizingMask = .flexibleHeight
 
         addSubview(submitButton)
