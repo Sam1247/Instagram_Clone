@@ -157,6 +157,7 @@ class DMtableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! UserDMCell
+        cell.delegate = self
         if isFiltering {
             cell.user = filteredUsers[indexPath.row]
         } else {
@@ -164,6 +165,38 @@ class DMtableViewController: UITableViewController {
         }
         return cell
     }
+    
+}
+
+extension DMtableViewController: UserDMCellDelegate {
+    func userDidFetch(for user: User, with cell: UserDMCell) {
+        guard let uid1 = Auth.auth().currentUser?.uid else { return }
+        let uid2 = user.uid 
+        let ref = Database.database().reference().child("Direct/messagesPreview/\(uid1)/\(uid2)")
+        ref.observe(.value) { snapshot in
+            if let dic = snapshot.value as? [String:Any] {
+                DispatchQueue.main.async {
+                    let fromId = dic["fromId"] as! String
+                    if uid1 == fromId {
+                        cell.lastMessageLabel.text = "You " + (dic["text"] as! String)
+                    } else {
+                        cell.lastMessageLabel.text = (dic["text"] as! String)
+                    }
+                    if let timestamp = dic["timeStamp"] as? Double {
+                        let timestampDate = NSDate(timeIntervalSince1970: TimeInterval(timestamp))
+                        let dateFormatter = DateFormatter()
+                        dateFormatter.dateFormat = "hh:mm:ss a"
+                        cell.timeLabel.text = dateFormatter.string(from: timestampDate as Date)
+                    }
+                }
+            } else {
+                cell.lastMessageLabel.text = "Say hi to your new Instgram friend!"
+            }
+        }
+    }
+    
+    
+    
     
 }
 

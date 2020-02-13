@@ -106,15 +106,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		2002FD12238AEBA100B13F05 /* Controller */ = {
+		2002FD12238AEBA100B13F05 /* SignIn+SignUp */ = {
 			isa = PBXGroup;
 			children = (
 				20462A8B238ABA2700A2BECC /* SignUpController.swift */,
 				20B77370238AF89B00D081BC /* LoginController.swift */,
-				20884303238B21F800D5EBE6 /* SharePhotoController.swift */,
-				20884309238B39C200D5EBE6 /* CustomImageView.swift */,
 			);
-			path = Controller;
+			path = "SignIn+SignUp";
 			sourceTree = "<group>";
 		};
 		2002FD13238AEBB000B13F05 /* Model */ = {
@@ -142,6 +140,8 @@
 			children = (
 				20462A8D238ABAAE00A2BECC /* Extentions.swift */,
 				208C8220238B535E00391134 /* FirebaseUtilities.swift */,
+				20884309238B39C200D5EBE6 /* CustomImageView.swift */,
+				20E3ECDF23DE3159003B954A /* DataLoadOperation.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -173,9 +173,10 @@
 				2090A40C238DB0C500FBACB0 /* User */,
 				20945A6B238C6FB0007694EB /* User Search */,
 				2088430B238B4BA900D5EBE6 /* Home */,
+				20DD5A7523F598FC001B7B17 /* Share */,
 				20A61C5C238B13F200D67F74 /* Photo Selector */,
 				2002FD13238AEBB000B13F05 /* Model */,
-				2002FD12238AEBA100B13F05 /* Controller */,
+				2002FD12238AEBA100B13F05 /* SignIn+SignUp */,
 				2002FD15238AEBCD00B13F05 /* Supporting Files */,
 				20462A80238AB9D300A2BECC /* Assets.xcassets */,
 				2002FD16238AEC0A00B13F05 /* Utilities */,
@@ -212,7 +213,6 @@
 			children = (
 				2088430C238B4BC800D5EBE6 /* HomeController.swift */,
 				2088430E238B4C7300D5EBE6 /* HomePostCell.swift */,
-				20E3ECDF23DE3159003B954A /* DataLoadOperation.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -256,6 +256,14 @@
 				20EACCCE23DC364000FD431F /* CommentInputTextView.swift */,
 			);
 			path = Comments;
+			sourceTree = "<group>";
+		};
+		20DD5A7523F598FC001B7B17 /* Share */ = {
+			isa = PBXGroup;
+			children = (
+				20884303238B21F800D5EBE6 /* SharePhotoController.swift */,
+			);
+			path = Share;
 			sourceTree = "<group>";
 		};
 		68D840194755F2166C05ADAF /* Frameworks */ = {

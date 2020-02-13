@@ -9,13 +9,20 @@
 import UIKit
 import Firebase
 
+protocol UserDMCellDelegate: AnyObject {
+    func userDidFetch(for user: User, with cell: UserDMCell)
+}
+
 class UserDMCell: UITableViewCell {
+    
+    weak var delegate: UserDMCellDelegate?
     
     var user: User? {
         didSet {
             self.usernameLabel.text = user?.username
             self.profileImageView.loadImage(urlString: user!.profileImageUrl)
-            setupPreviewMessage()
+            //setupPreviewMessage()
+            delegate?.userDidFetch(for: user!, with: self)
         }
     }
     

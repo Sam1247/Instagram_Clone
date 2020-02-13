@@ -9,7 +9,6 @@
 import Foundation
 
 import Foundation
-import Firebase
 
 struct Message {
     var fromId: String
