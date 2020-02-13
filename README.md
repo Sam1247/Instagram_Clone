@@ -41,6 +41,6 @@ A clone of instagram iOS app created using Swift 5 and Firebase
 # performance
 * Using pagination in homefeed and messages to reduce server cost
 * implement infinite scrolling ( The app loads some initial data and then adds the rest of the information when the user reaches the bottom of the visible content) in home feed for better user experience
-* prefetching the posts before they got displayed in the backgrourd threads reducing the catch mis by roughly 40%
+* prefetching the posts before they got displayed in the backgrourd threads reducing the catch miss by roughly 40%
 <a href="https://imgflip.com/gif/3p4rxu"><img src="https://i.imgflip.com/3p4rxu.gif" title="made at imgflip.com"/></a>
 <a href="https://imgflip.com/gif/3p4sdu"><img src="https://i.imgflip.com/3p4sdu.gif" title="made at imgflip.com"/></a>
